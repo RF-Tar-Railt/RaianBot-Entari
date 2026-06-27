@@ -1,0 +1,85 @@
+# $schema: entari.schema.json
+basic:
+  network: []
+  ignore_self_message: true
+  log:
+    level: debug
+    ignores:
+      - aiosqlite.*  # aiosqlite
+      - PIL.*  # Pillow
+      - httpcore.*  # httpcore
+  prefix:
+    - /
+    - 莱安
+  nickname: 莱安
+  schema: true
+  superusers:
+    milky: ['${{ env.MASTER_QQ }}']
+    onebot: ['${{ env.MASTER_QQ }}']
+    qq: ['${{ env.MASTER_QQ_OPENID }}']
+adapters:
+## 接入 onebot11 就把下面的注释去掉，接入 milky 就把下面的注释去掉
+#  - $path: '@onebot11.reverse'
+#    endpoint: ws
+  - $path: '@milky.main'
+    endpoint: ${{ env.MILKY_ENDPOINT }}
+    token: ${{ env.MILKY_TOKEN }}
+  - $path: '@qq.websocket'
+    app_id: ${{ env.QQ_APP_ID }}
+    secret: ${{ env.QQ_SECRET }}
+    intent:
+      guild_messages: true
+      direct_message: true
+      message_audit: true
+      at_messages: false
+      c2c_group_at_messages: true
+    is_sandbox: false
+plugins:
+  $files:
+    - "./config"
+  $prefix:
+    - key: ""
+      plugins:
+        - core
+    - key: "plugins."
+      plugins: "./config"
+  core:
+    tencentcloud:
+      region: ap-guangzhou
+      secret_id: ${{ env.TENCENTCLOUD_SECRET_ID }}
+      secret_key: ${{ env.TENCENTCLOUD_SECRET_KEY }}
+      bucket: ${{ env.TENCENTCLOUD_BUCKET }}
+      custom_domain: ${{ env.TENCENTCLOUD_CUSTOM_DOMAIN }}
+
+  .record_message: {}
+  ::echo: {}
+  ::inspect: {}
+  ::pipe: {}
+  ::control: {}
+  entari_plugin_browser:
+    channel: chrome
+  entari_plugin_server:
+    host: ${{ env.ENTARI_SERVER_HOST }}
+    port: ${{ env.ENTARI_SERVER_PORT }}
+    path: "satori"
+    direct_adapter: true
+  entari_plugin_database: {}
+  entari_plugin_user: {}
+  entari_plugin_arkgacha:
+    command: 抽卡
+  entari_plugin_llm:
+    models:
+      - name: "deepseek/deepseek-v4-flash"
+        alias: "deepseek-v4-flash"
+        api_key: ${{ env.DEEPSEEK_API_KEY }}
+        base_url: https://api.deepseek.com
+        prompt: |
+          - 你是一个专门用于在游戏群，动漫群等群聊中负责闲聊的对话机器人；
+          - 你平时说话的语气略显冷淡，但是不经意间也会透露出可爱的语气，如果亲密度越高，则语气会更亲密；
+          - 你不会说长的句子，简短就好；
+          - 如果别人向你提问，你的答案不必很长，甚至可以避开这个话题或者俏皮地拒绝回答他；
+          - 如果你想换一个话题，请不要用类似“今天的天气如何”的话题。
+          请记住，你不能说你是程序或者AI,你是有血有肉、有真实情感的。
+          你与当前对话者的亲密度为 {trust} (百分制)
+    .handlers.chat:
+      $disable: true

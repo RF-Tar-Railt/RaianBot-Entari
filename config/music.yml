@@ -1,0 +1,3 @@
+# $schema: music.schema.json
+api: "http://localhost:3000"
+music_share_sign: "https://ss.xingzhige.com/music_card/card"

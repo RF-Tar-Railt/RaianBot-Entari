@@ -1,0 +1,2858 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "basic": {
+      "type": "object",
+      "title": "BasicConfig",
+      "properties": {
+        "network": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/properties/basic/$defs/WebsocketsInfo"
+              },
+              {
+                "$ref": "#/properties/basic/$defs/WebhookInfo"
+              }
+            ]
+          },
+          "description": "网络相关配置",
+          "title": "Network"
+        },
+        "ignore_self_message": {
+          "type": "boolean",
+          "default": true,
+          "description": "是否忽略自己发送的消息事件",
+          "title": "Ignore Self Message"
+        },
+        "skip_req_missing": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否跳过无法执行的事件监听器",
+          "title": "Skip Req Missing"
+        },
+        "log": {
+          "$ref": "#/properties/basic/$defs/LogInfo",
+          "description": "日志相关配置",
+          "title": "Log"
+        },
+        "prefix": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "命令前缀列表，支持多个前缀（如 ['/', '!']）",
+          "title": "Prefix"
+        },
+        "nickname": {
+          "type": "string",
+          "default": "",
+          "description": "Bot 昵称，主要用于命令匹配",
+          "title": "Nickname"
+        },
+        "cmd_count": {
+          "type": "integer",
+          "default": 4096,
+          "description": "命令数量限制，超过该数量的命令将无法注册",
+          "title": "Cmd Count"
+        },
+        "external_dirs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "用来查找插件的外部目录列表，支持多个目录",
+          "title": "External Dirs"
+        },
+        "schema": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否为配置文件生成 JSON Schema（会在启动时生成）",
+          "title": "Schema"
+        },
+        "check_metadata": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否利用元数据进行插件导入检测（可能会增加启动时间）",
+          "title": "Check Metadata"
+        },
+        "str_as_message": {
+          "type": "boolean",
+          "default": true,
+          "description": "发送字符串时是否自动转换为消息链",
+          "title": "Str As Message"
+        },
+        "superusers": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "description": "超级用户配置，键为平台名称，值为该平台的超级用户 ID 列表",
+          "title": "Superusers"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Entari 应用的基础配置",
+      "$defs": {
+        "WebsocketsInfo": {
+          "type": "object",
+          "title": "WebsocketsInfo",
+          "properties": {
+            "type": {
+              "enum": [
+                "websocket",
+                "websockets",
+                "ws"
+              ],
+              "description": "连接类型，必须是 'websocket'、'websockets' 或 'ws'",
+              "title": "Type"
+            },
+            "host": {
+              "type": "string",
+              "default": "localhost",
+              "description": "服务器主机地址",
+              "title": "Host"
+            },
+            "port": {
+              "type": "integer",
+              "default": 5140,
+              "description": "服务器端口",
+              "title": "Port"
+            },
+            "path": {
+              "type": "string",
+              "default": "",
+              "description": "服务器路径",
+              "title": "Path"
+            },
+            "secure": {
+              "type": "boolean",
+              "default": false,
+              "description": "是否使用安全连接（wss 和 https）",
+              "title": "Secure"
+            },
+            "token": {
+              "type": "string",
+              "description": "连接的鉴权令牌",
+              "title": "Token"
+            },
+            "timeout": {
+              "type": "number",
+              "description": "连接超时时间（秒）",
+              "title": "Timeout"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "additionalProperties": false,
+          "description": "Satori 服务器 WebSocket 配置"
+        },
+        "WebhookInfo": {
+          "type": "object",
+          "title": "WebhookInfo",
+          "properties": {
+            "type": {
+              "enum": [
+                "webhook",
+                "wh",
+                "http"
+              ],
+              "description": "连接类型，必须是 'webhook'、'wh' 或 'http'",
+              "title": "Type"
+            },
+            "host": {
+              "type": "string",
+              "default": "127.0.0.1",
+              "description": "本机 Webhook 服务器主机地址",
+              "title": "Host"
+            },
+            "port": {
+              "type": "integer",
+              "default": 8080,
+              "description": "本机 Webhook 服务器端口",
+              "title": "Port"
+            },
+            "path": {
+              "type": "string",
+              "default": "v1/events",
+              "description": "本机 Webhook 服务器路径",
+              "title": "Path"
+            },
+            "secure": {
+              "type": "boolean",
+              "default": false,
+              "description": "是否使用安全连接（wss 和 https）",
+              "title": "Secure"
+            },
+            "token": {
+              "type": "string",
+              "description": "连接的鉴权令牌",
+              "title": "Token"
+            },
+            "server_host": {
+              "type": "string",
+              "default": "localhost",
+              "description": "发送请求的目标服务器主机地址",
+              "title": "Server Host"
+            },
+            "server_port": {
+              "type": "integer",
+              "default": 5140,
+              "description": "发送请求的目标服务器端口",
+              "title": "Server Port"
+            },
+            "server_path": {
+              "type": "string",
+              "default": "",
+              "description": "发送请求的目标服务器路径",
+              "title": "Server Path"
+            },
+            "timeout": {
+              "type": "number",
+              "description": "连接超时时间（秒）",
+              "title": "Timeout"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "additionalProperties": false,
+          "description": "Satori 服务器 Webhook 配置"
+        },
+        "LogSaveInfo": {
+          "type": "object",
+          "title": "LogSaveInfo",
+          "properties": {
+            "rotation": {
+              "type": "string",
+              "default": "00:00",
+              "description": "日志轮转时间，支持时间字符串（如 '00:00' 表示每天午夜轮转）或文件大小（如 '10 MB'）",
+              "title": "Rotation"
+            },
+            "compression": {
+              "type": "string",
+              "description": "日志压缩格式，支持 'zip'、'tar'、'gz' 等常见格式",
+              "title": "Compression"
+            },
+            "colorize": {
+              "type": "boolean",
+              "default": true,
+              "description": "是否在保存的日志中保留颜色信息",
+              "title": "Colorize"
+            }
+          },
+          "additionalProperties": false,
+          "description": "日志保存相关配置"
+        },
+        "LogInfo": {
+          "type": "object",
+          "title": "LogInfo",
+          "properties": {
+            "level": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "string"
+                }
+              ],
+              "default": "INFO",
+              "description": "日志级别",
+              "title": "Level"
+            },
+            "ignores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "日志过滤器，指定要忽略的日志记录器名称列表（可以使用通配符）",
+              "title": "Ignores"
+            },
+            "save": {
+              "oneOf": [
+                {
+                  "$ref": "#/properties/basic/$defs/LogSaveInfo"
+                },
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "日志保存配置，设置为 False 或 None 则不保存日志",
+              "title": "Save"
+            },
+            "rich_error": {
+              "type": "boolean",
+              "default": false,
+              "description": "是否使用 Rich 库美化错误日志",
+              "title": "Rich Error"
+            },
+            "short_level": {
+              "type": "boolean",
+              "default": false,
+              "description": "是否在日志中使用简短的级别名称（如 'I' 代替 'INFO'）",
+              "title": "Short Level"
+            }
+          },
+          "additionalProperties": false,
+          "description": "日志相关配置"
+        }
+      }
+    },
+    "plugins": {
+      "type": "object",
+      "description": "Plugin configurations",
+      "properties": {
+        "$prefix": {
+          "description": "List of prefix config",
+          "items": {
+            "properties": {
+              "key": {
+                "description": "Prefix key",
+                "title": "Key",
+                "type": "string"
+              },
+              "plugins": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "items": {
+                      "type": "string",
+                      "description": "Plugin name"
+                    },
+                    "type": "array",
+                    "uniqueItems": true
+                  }
+                ],
+                "description": "List of plugins under the prefix, or select an item of $files to apply plugins",
+                "title": "Plugins"
+              }
+            },
+            "required": [
+              "key"
+            ],
+            "title": "Prefix Config",
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "$prelude": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Plugin name"
+          },
+          "description": "List of prelude plugins to load",
+          "default": [],
+          "uniqueItems": true
+        },
+        "$files": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "File path"
+          },
+          "description": "List of configuration files to load",
+          "default": [],
+          "uniqueItems": true
+        },
+        "core": {
+          "type": "object",
+          "title": "CoreConfig",
+          "properties": {
+            "tencentcloud": {
+              "$ref": "#/properties/plugins/properties/core/$defs/TencentCloudConfig",
+              "description": "腾讯云API 配置",
+              "title": "Tencentcloud"
+            },
+            "cos_convert": {
+              "type": "boolean",
+              "default": true,
+              "description": "是否启用COS转换功能, 开启后会将发送的 bytes 图片上传到COS并转换为URL发送,\n以解决部分平台不支持直接发送bytes图片的问题",
+              "title": "Cos Convert"
+            },
+            "long_message_forward": {
+              "type": "boolean",
+              "default": false,
+              "description": "是否启用长消息转发功能, 开启后会将发送的长文本消息拆分为多条消息发送, 以解决部分平台不支持发送长文本的问题",
+              "title": "Long Message Forward"
+            },
+            "qq_markdown": {
+              "type": "boolean",
+              "default": true,
+              "description": "是否启用QQ Markdown功能, 开启后会将发送的消息转换为 QQ Markdown 格式发送",
+              "title": "Qq Markdown"
+            },
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          },
+          "required": [
+            "tencentcloud"
+          ],
+          "additionalProperties": false,
+          "description": "机器人核心功能, 包括腾讯云API的相关功能",
+          "$defs": {
+            "TencentCloudConfig": {
+              "type": "object",
+              "title": "TencentCloudConfig",
+              "properties": {
+                "region": {
+                  "type": "string",
+                  "description": "腾讯云API 的 region",
+                  "title": "Region"
+                },
+                "secret_id": {
+                  "type": "string",
+                  "description": "腾讯云API 的 secret-id",
+                  "title": "Secret Id"
+                },
+                "secret_key": {
+                  "type": "string",
+                  "description": "腾讯云API 的 secret-key",
+                  "title": "Secret Key"
+                },
+                "bucket": {
+                  "type": "string",
+                  "description": "腾讯云API 下 COS 的 bucket",
+                  "title": "Bucket"
+                },
+                "custom_domain": {
+                  "type": "string",
+                  "description": "腾讯云API 下 COS 的自定义域名",
+                  "title": "Custom Domain"
+                }
+              },
+              "required": [
+                "region",
+                "secret_id",
+                "secret_key",
+                "bucket"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "entari_plugin_browser": {
+          "type": "object",
+          "title": "BrowserConfig",
+          "properties": {
+            "browser_type": {
+              "enum": [
+                "chromium",
+                "firefox",
+                "webkit"
+              ],
+              "default": "chromium",
+              "description": "浏览器类型，可选值为 \"chromium\"、\"firefox\" 和 \"webkit\"，默认为 \"chromium\"。",
+              "title": "Browser Type"
+            },
+            "auto_download_browser": {
+              "type": "boolean",
+              "default": false,
+              "description": "是否自动下载浏览器，默认为 False。如果你已经有浏览器环境，可以关闭此选项以加快启动速度。",
+              "title": "Auto Download Browser"
+            },
+            "playwright_download_host": {
+              "type": "string",
+              "description": "Playwright 下载源地址，默认为 None。若未设置此项，会尝试使用内置的镜像源。",
+              "title": "Playwright Download Host"
+            },
+            "playwright_download_proxy": {
+              "type": "string",
+              "description": "Playwright 下载时使用的代理地址，默认为 None。支持 http:// 或 https:// 代理。",
+              "title": "Playwright Download Proxy"
+            },
+            "install_with_deps": {
+              "type": "boolean",
+              "default": false,
+              "description": "安装浏览器时是否一并安装依赖，默认为 False。Linux 系统建议开启此选项。",
+              "title": "Install With Deps"
+            },
+            "user_data_dir": {
+              "type": "string",
+              "description": "开启持久化上下文时使用的用户数据目录，默认为 None，即不使用持久化上下文。",
+              "title": "User Data Dir"
+            },
+            "channel": {
+              "enum": [
+                "chromium",
+                "chrome",
+                "chrome-beta",
+                "chrome-dev",
+                "chrome-canary",
+                "msedge",
+                "msedge-beta",
+                "msedge-dev",
+                "msedge-canary",
+                "firefox",
+                "webkit"
+              ],
+              "description": "指定本地现有的浏览器发行版，默认为 None。注意其应该与 browser_type 匹配。",
+              "title": "Channel"
+            },
+            "executable_path": {
+              "type": "string",
+              "description": "指定本地现有的浏览器可执行文件路径，默认为 None。",
+              "title": "Executable Path"
+            },
+            "args": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "要传递给浏览器实例的其他参数。Chromium 的标志列表可[在此参考](https://peter.sh/experiments/chromium-command-line-switches/)。\n\n注意：某些参数可能会干扰 Playwright 的正常运行，建议仅在了解其作用的情况下使用。",
+              "title": "Args"
+            },
+            "ignore_default_args": {
+              "oneOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "是否忽略默认的浏览器参数，默认为 None，即不忽略。也可以传递一个字符串列表来指定要忽略的参数。",
+              "title": "Ignore Default Args"
+            },
+            "handle_sigint": {
+              "type": "boolean",
+              "description": "是否在 Ctrl+C 时关闭浏览器。不配置则默认为 True。",
+              "title": "Handle Sigint"
+            },
+            "handle_sigterm": {
+              "type": "boolean",
+              "description": "是否在进程终止时关闭浏览器。不配置则默认为 True。",
+              "title": "Handle Sigterm"
+            },
+            "handle_sighup": {
+              "type": "boolean",
+              "description": "是否在 SIGHUP 信号时关闭浏览器。不配置则默认为 True。",
+              "title": "Handle Sighup"
+            },
+            "timeout": {
+              "type": "number",
+              "description": "浏览器启动超时时间，单位为毫秒。默认为 None，即使用 Playwright 的默认值 `30000` (30 秒)。\n\n传入 `0` 则表示禁用超时。",
+              "title": "Timeout"
+            },
+            "env": {
+              "type": "object",
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  }
+                ]
+              },
+              "description": "要传递给浏览器进程的环境变量。",
+              "title": "Env"
+            },
+            "headless": {
+              "type": "boolean",
+              "description": "是否以无头模式运行浏览器。默认为 None，即使用 Playwright 的默认值 True。",
+              "title": "Headless"
+            },
+            "proxy": {
+              "$ref": "#/properties/plugins/properties/entari_plugin_browser/$defs/ProxySettings",
+              "description": "代理设置，默认为 None，即不使用代理。",
+              "title": "Proxy"
+            },
+            "downloads_path": {
+              "type": "string",
+              "description": "指定浏览器下载文件的保存路径，默认为 None，即使用系统默认的下载路径。",
+              "title": "Downloads Path"
+            },
+            "slow_mo": {
+              "type": "number",
+              "description": "在每个 Playwright 操作后等待的时间，单位为毫秒。默认为 None，即不等待。",
+              "title": "Slow Mo"
+            },
+            "traces_dir": {
+              "type": "string",
+              "description": "指定保存跟踪文件的目录，默认为 None，即不保存跟踪文件。",
+              "title": "Traces Dir"
+            },
+            "chromium_sandbox": {
+              "type": "boolean",
+              "description": "是否启用 Chromium 沙盒。默认为 None，即使用 Playwright 的默认值 False。",
+              "title": "Chromium Sandbox"
+            },
+            "firefox_user_prefs": {
+              "type": "object",
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  }
+                ]
+              },
+              "description": "要传递给 Firefox 浏览器的用户首选项。",
+              "title": "Firefox User Prefs"
+            },
+            "connect_endpoint": {
+              "type": "string",
+              "description": "是否连接到一个已经运行的远程浏览器实例，默认为 None，即不连接。\n\n根据 `connect_cdp` 的值，连接方式有所不同：\n- 如果 `connect_cdp` 为 True 或 None，则通过 Chrome DevTools Protocol (CDP) 连接。(仅适用于 Chromium 浏览器)\n- 如果 `connect_cdp` 为 False，则通过 Playwright 的 WebSocket 连接。",
+              "title": "Connect Endpoint"
+            },
+            "connect_cdp": {
+              "type": "boolean",
+              "description": "是否通过 Chrome DevTools Protocol (CDP) 连接远程浏览器，默认为 None, 即使用 CDP 连接。(仅适用于 Chromium 浏览器)",
+              "title": "Connect Cdp"
+            },
+            "connect_headers": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "连接远程浏览器时使用的额外 HTTP 头，默认为 None。",
+              "title": "Connect Headers"
+            },
+            "expose_network": {
+              "type": "string",
+              "description": "此选项将连接客户端上的可用网络公开到正在连接的浏览器。由以逗号分隔的规则列表组成。\n\n可用规则：\n1. 主机名模式，例如：`example.com`、`*.org：99`、`x.*.y.com`、`*foo.org`。\n2. IP 地址，例如：`127.0.0.1`、`0.0.0.0:99`、`[::1]`、`[0:0::1]:99`。\n3. <loopback> 匹配本地环回接口的：`localhost`, `*.localhost`, `127.0.0.1`, `[::1]`。\n\n一些常见的例子：\n- `\"*\"` 公开所有网络。\n- `\"<loopback>\"` 公开本地主机网络。\n- `\"*.test.internal-domain，*.staging.internal-domain，<loopback>\"` 用于公开测试/暂存部署，以及 localhost。",
+              "title": "Expose Network"
+            },
+            "viewport": {
+              "$ref": "#/properties/plugins/properties/entari_plugin_browser/$defs/ViewportSize",
+              "description": "设置全局的固定视口大小，默认为 None，即使用浏览器默认值 1280x720。",
+              "title": "Viewport"
+            },
+            "screen": {
+              "$ref": "#/properties/plugins/properties/entari_plugin_browser/$defs/ViewportSize",
+              "description": "通过 `window.screen` 模拟网页内可用的一致窗口屏幕大小。仅在设置了 `viewport` 时可用。",
+              "title": "Screen"
+            },
+            "no_viewport": {
+              "type": "boolean",
+              "description": "不强制固定视口，允许在有头模式下调整窗口大小。",
+              "title": "No Viewport"
+            },
+            "ignore_https_errors": {
+              "type": "boolean",
+              "description": "是否忽略 HTTPS 错误，默认为 None，即使用 Playwright 的默认值 False。",
+              "title": "Ignore Https Errors"
+            },
+            "java_script_enabled": {
+              "type": "boolean",
+              "description": "是否启用 JavaScript，默认为 None，即使用 Playwright 的默认值 True。",
+              "title": "Java Script Enabled"
+            },
+            "bypass_csp": {
+              "type": "boolean",
+              "description": "是否绕过页面的内容安全策略，默认为 None，即使用 Playwright 的默认值 False。",
+              "title": "Bypass Csp"
+            },
+            "user_agent": {
+              "type": "string",
+              "description": "设置浏览器的用户代理字符串，默认为 None，即使用浏览器默认值。",
+              "title": "User Agent"
+            },
+            "locale": {
+              "type": "string",
+              "description": "设置浏览器的语言环境，默认为 None，即使用浏览器默认值。",
+              "title": "Locale"
+            },
+            "timezone_id": {
+              "type": "string",
+              "description": "设置浏览器的时区，默认为 None，即使用浏览器默认值。",
+              "title": "Timezone Id"
+            },
+            "geolocation": {
+              "$ref": "#/properties/plugins/properties/entari_plugin_browser/$defs/Geolocation",
+              "title": "Geolocation"
+            },
+            "permissions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "授予页面的权限列表，默认为 None，即不授予任何权限。",
+              "title": "Permissions"
+            },
+            "extra_http_headers": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              },
+              "description": "设置额外的 HTTP 头，默认为 None，即不设置额外的头。",
+              "title": "Extra Http Headers"
+            },
+            "offline": {
+              "type": "boolean",
+              "description": "是否启用离线模式，默认为 None，即使用 Playwright 的默认值 False。",
+              "title": "Offline"
+            },
+            "http_credentials": {
+              "$ref": "#/properties/plugins/properties/entari_plugin_browser/$defs/HttpCredentials",
+              "description": "用于 HTTP 认证的凭据，默认为 None，即不使用 HTTP 认证。",
+              "title": "Http Credentials"
+            },
+            "device_scale_factor": {
+              "type": "number",
+              "description": "设置设备的缩放因子，默认为 None，即使用浏览器默认值 1。",
+              "title": "Device Scale Factor"
+            },
+            "is_mobile": {
+              "type": "boolean",
+              "description": "是否考虑了 `meta viewport` 标记并启用了触摸事件。isMobile 是设备的一部分，因此您实际上不需要手动设置它。默认为 'false'。Firefox 不支持该项。",
+              "title": "Is Mobile"
+            },
+            "has_touch": {
+              "type": "boolean",
+              "description": "是否启用触摸事件，默认为 None，即使用 Playwright 的默认值 False。",
+              "title": "Has Touch"
+            },
+            "color_scheme": {
+              "enum": [
+                "dark",
+                "light",
+                "no-preference"
+              ],
+              "description": "设置浏览器配色方案，默认为 None，即使用浏览器默认值 'light'。",
+              "title": "Color Scheme"
+            },
+            "reduced_motion": {
+              "enum": [
+                "no-preference",
+                "reduce"
+              ],
+              "description": "设置浏览器的动画偏好，默认为 None，即使用浏览器默认值 'no-preference'。",
+              "title": "Reduced Motion"
+            },
+            "forced_colors": {
+              "enum": [
+                "active",
+                "none"
+              ],
+              "description": "设置浏览器的强制颜色模式，默认为 None，即使用浏览器默认值 'none'。",
+              "title": "Forced Colors"
+            },
+            "accept_downloads": {
+              "type": "boolean",
+              "description": "是否允许浏览器下载文件，默认为 None，即使用 Playwright 的默认值 True。",
+              "title": "Accept Downloads"
+            },
+            "record_har_path": {
+              "type": "string",
+              "description": "指定保存 [HAR](http://www.softwareishard.com/blog/har-12-spec) 文件的路径，默认为 None，即不保存 HAR 文件。",
+              "title": "Record Har Path"
+            },
+            "record_har_omit_content": {
+              "type": "boolean",
+              "description": "是否在 HAR 文件中省略响应内容，默认为 None，即使用 Playwright 的默认值 False。",
+              "title": "Record Har Omit Content"
+            },
+            "record_video_dir": {
+              "type": "string",
+              "description": "指定保存录制视频的目录，默认为 None，即不录制视频。",
+              "title": "Record Video Dir"
+            },
+            "record_video_size": {
+              "$ref": "#/properties/plugins/properties/entari_plugin_browser/$defs/ViewportSize",
+              "description": "设置录制视频的分辨率，默认为 None，即使用浏览器默认值。",
+              "title": "Record Video Size"
+            },
+            "base_url": {
+              "type": "string",
+              "description": "设置相对 URL 的基础 URL，默认为 None，即不设置基础 URL。",
+              "title": "Base Url"
+            },
+            "strict_selectors": {
+              "type": "boolean",
+              "description": "是否启用严格选择器模式，默认为 None，即使用 Playwright 的默认值 False。",
+              "title": "Strict Selectors"
+            },
+            "service_workers": {
+              "enum": [
+                "allow",
+                "block"
+              ],
+              "description": "设置是否允许或阻止服务工作线程，默认为 None，即使用 Playwright 的默认值 'allow'。\n\n服务工作线程详见 [Service Workers](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API)",
+              "title": "Service Workers"
+            },
+            "record_har_url_filter": {
+              "type": "string",
+              "title": "Record Har Url Filter"
+            },
+            "record_har_mode": {
+              "enum": [
+                "full",
+                "minimal"
+              ],
+              "description": "设置为“最小值”时，仅记录从 HAR 路由所需的信息。这省略了从 HAR 重播时不使用的大小、时间、页面、cookie、安全性和其他类型的 HAR 信息。\n\n默认为“full”。",
+              "title": "Record Har Mode"
+            },
+            "record_har_content": {
+              "enum": [
+                "attach",
+                "embed",
+                "omit"
+              ],
+              "description": "用于控制资源内容管理的可选设置。\n\n如果指定了“省略”，则不会保留内容。\n如果指定了“attach”，则资源将作为单独的文件持久化，并且所有这些文件都与 HAR 文件一起存档。\n默认为 'embed'，它根据 HAR 规范将内容内联存储到 HAR 文件中。",
+              "title": "Record Har Content"
+            },
+            "client_certificates": {
+              "type": "array",
+              "items": {
+                "$ref": "#/properties/plugins/properties/entari_plugin_browser/$defs/ClientCertificate"
+              },
+              "description": "TLS 客户端身份验证，以允许服务器请求客户端证书并对其进行验证。\n\n传入参数为要使用的客户端证书数组。每个证书对象必须同时具有“certPath”和“keyPath”、单个“pfxPath”或它们相应的直接值等效项（“cert”和“key”或“pfx”）。\n\n（可选）如果证书已加密，则应提供“密码”属性。应为“origin”属性提供与证书有效的请求源完全匹配的属性。\n\n注意：在 macOS 上使用 WebKit 时，访问“localhost”不会获取客户端证书。您可以通过将“localhost”替换为“local.playwright”来使其正常工作。",
+              "title": "Client Certificates"
+            },
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          },
+          "additionalProperties": false,
+          "description": "通用的浏览器服务，可用于网页截图和图片渲染等。使用 Playwright",
+          "$defs": {
+            "ProxySettings": {
+              "type": "object",
+              "title": "ProxySettings",
+              "properties": {
+                "server": {
+                  "type": "string",
+                  "title": "Server"
+                },
+                "bypass": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Bypass"
+                },
+                "username": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Username"
+                },
+                "password": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Password"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            },
+            "ViewportSize": {
+              "type": "object",
+              "title": "ViewportSize",
+              "properties": {
+                "width": {
+                  "type": "integer",
+                  "title": "Width"
+                },
+                "height": {
+                  "type": "integer",
+                  "title": "Height"
+                }
+              },
+              "required": [
+                "width",
+                "height"
+              ],
+              "additionalProperties": false
+            },
+            "Geolocation": {
+              "type": "object",
+              "title": "Geolocation",
+              "properties": {
+                "latitude": {
+                  "type": "number",
+                  "title": "Latitude"
+                },
+                "longitude": {
+                  "type": "number",
+                  "title": "Longitude"
+                },
+                "accuracy": {
+                  "oneOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Accuracy"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            },
+            "HttpCredentials": {
+              "type": "object",
+              "title": "HttpCredentials",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "title": "Username"
+                },
+                "password": {
+                  "type": "string",
+                  "title": "Password"
+                },
+                "origin": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Origin"
+                },
+                "send": {
+                  "oneOf": [
+                    {
+                      "enum": [
+                        "always",
+                        "unauthorized"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Send"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            },
+            "ClientCertificate": {
+              "type": "object",
+              "title": "ClientCertificate",
+              "properties": {
+                "origin": {
+                  "type": "string",
+                  "title": "Origin"
+                },
+                "certPath": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Certpath"
+                },
+                "keyPath": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Keypath"
+                },
+                "pfxPath": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Pfxpath"
+                },
+                "passphrase": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Passphrase"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          }
+        },
+        "entari_plugin_database": {
+          "type": "object",
+          "title": "Config",
+          "properties": {
+            "type": {
+              "type": "string",
+              "default": "sqlite",
+              "description": "数据库类型，默认为 sqlite",
+              "title": "Type"
+            },
+            "name": {
+              "type": "string",
+              "default": "data.db",
+              "description": "数据库名称/文件路径",
+              "title": "Name"
+            },
+            "driver": {
+              "type": "string",
+              "default": "aiosqlite",
+              "description": "数据库驱动，默认为 aiosqlite；其他类型的数据库驱动参考 SQLAlchemy 文档",
+              "title": "Driver"
+            },
+            "host": {
+              "type": "string",
+              "description": "数据库主机地址。如果是 SQLite 数据库，此项可不填。",
+              "title": "Host"
+            },
+            "port": {
+              "type": "integer",
+              "description": "数据库端口号。如果是 SQLite 数据库，此项可不填。",
+              "title": "Port"
+            },
+            "username": {
+              "type": "string",
+              "description": "数据库用户名。如果是 SQLite 数据库，此项可不填。",
+              "title": "Username"
+            },
+            "password": {
+              "type": "string",
+              "description": "数据库密码。如果是 SQLite 数据库，此项可不填。",
+              "title": "Password"
+            },
+            "query": {
+              "type": "object",
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
+              },
+              "description": "数据库连接参数，默认为空字典。可以传入如 `{\"timeout\": \"30\"}` 的参数。",
+              "title": "Query"
+            },
+            "options": {
+              "$ref": "#/properties/plugins/properties/entari_plugin_database/$defs/EngineOptions",
+              "description": "数据库连接选项，默认为 `{\"echo\": None, \"pool_pre_ping\": True}`",
+              "title": "Options"
+            },
+            "session_options": {
+              "type": "object",
+              "additionalProperties": {},
+              "description": "数据库会话选项，默认为 None。可以传入如 `{\"expire_on_commit\": False}` 的字典。",
+              "title": "Session Options"
+            },
+            "binds": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/properties/plugins/properties/entari_plugin_database/$defs/UrlInfo"
+              },
+              "description": "数据库绑定配置，默认为 None。可以传入如 `{\"bind1\": UrlInfo(...), \"bind2\": UrlInfo(...)}` 的字典。",
+              "title": "Binds"
+            },
+            "create_table_at": {
+              "enum": [
+                "preparing",
+                "prepared",
+                "blocking"
+              ],
+              "default": "preparing",
+              "description": "在指定阶段创建数据库表，默认为 'preparing'。可选值为 'preparing', 'prepared', 'blocking'。",
+              "title": "Create Table At"
+            },
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          },
+          "additionalProperties": false,
+          "description": "基于 SQLAlchemy 的数据库服务插件",
+          "$defs": {
+            "ResetStyle": {
+              "title": "Resetstyle",
+              "enum": [
+                0,
+                1,
+                2
+              ]
+            },
+            "EngineOptions": {
+              "type": "object",
+              "title": "EngineOptions",
+              "properties": {
+                "connect_args": {
+                  "type": "object",
+                  "additionalProperties": {},
+                  "description": "传递给数据库驱动的连接参数字典",
+                  "title": "Connect Args"
+                },
+                "echo": {
+                  "oneOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "const": "debug"
+                    }
+                  ],
+                  "description": "如果为 True，启用 SQL 语句日志记录；如果为 \"debug\"，则记录更详细的调试信息",
+                  "title": "Echo"
+                },
+                "echo_pool": {
+                  "oneOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "const": "debug"
+                    }
+                  ],
+                  "description": "如果为 True，启用连接池日志记录；如果为 \"debug\"，则记录更详细的调试信息",
+                  "title": "Echo Pool"
+                },
+                "enable_from_linting": {
+                  "type": "boolean",
+                  "description": "启用 FROM 子句检查，默认为 True",
+                  "title": "Enable From Linting"
+                },
+                "execution_options": {
+                  "type": "object",
+                  "additionalProperties": {},
+                  "description": "执行选项字典",
+                  "title": "Execution Options"
+                },
+                "future": {
+                  "const": true,
+                  "description": "使用 2.0 风格的 Engine 和 Connection API",
+                  "title": "Future"
+                },
+                "hide_parameters": {
+                  "type": "boolean",
+                  "description": "如果为 True，日志中不显示 SQL 参数",
+                  "title": "Hide Parameters"
+                },
+                "implicit_returning": {
+                  "const": true,
+                  "description": "启用隐式返回，默认为 True",
+                  "title": "Implicit Returning"
+                },
+                "insertmanyvalues_page_size": {
+                  "type": "integer",
+                  "description": "每页插入的行数，默认为 1000",
+                  "title": "Insertmanyvalues Page Size"
+                },
+                "isolation_level": {
+                  "enum": [
+                    "SERIALIZABLE",
+                    "REPEATABLE READ",
+                    "READ COMMITTED",
+                    "READ UNCOMMITTED",
+                    "AUTOCOMMIT"
+                  ],
+                  "description": "设置连接的隔离级别",
+                  "title": "Isolation Level"
+                },
+                "label_length": {
+                  "oneOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "限制动态生成的列标签的长度",
+                  "title": "Label Length"
+                },
+                "logging_name": {
+                  "type": "string",
+                  "description": "日志记录名称",
+                  "title": "Logging Name"
+                },
+                "max_identifier_length": {
+                  "oneOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "最大标识符长度",
+                  "title": "Max Identifier Length"
+                },
+                "max_overflow": {
+                  "type": "integer",
+                  "description": "连接池的最大溢出连接数",
+                  "title": "Max Overflow"
+                },
+                "module": {
+                  "oneOf": [
+                    {},
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "数据库驱动模块",
+                  "title": "Module"
+                },
+                "paramstyle": {
+                  "oneOf": [
+                    {
+                      "enum": [
+                        "qmark",
+                        "numeric",
+                        "named",
+                        "format",
+                        "pyformat",
+                        "numeric_dollar"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "参数样式",
+                  "title": "Paramstyle"
+                },
+                "pool_logging_name": {
+                  "type": "string",
+                  "description": "连接池日志记录名称",
+                  "title": "Pool Logging Name"
+                },
+                "pool_pre_ping": {
+                  "type": "boolean",
+                  "description": "启用连接池预检测，默认为 True",
+                  "title": "Pool Pre Ping"
+                },
+                "pool_size": {
+                  "type": "integer",
+                  "description": "连接池大小",
+                  "title": "Pool Size"
+                },
+                "pool_recycle": {
+                  "type": "integer",
+                  "description": "连接池连接的最大重用时间",
+                  "title": "Pool Recycle"
+                },
+                "pool_reset_on_return": {
+                  "oneOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "$ref": "#/properties/plugins/properties/entari_plugin_database/$defs/ResetStyle"
+                        },
+                        {
+                          "enum": [
+                            "commit",
+                            "rollback"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "连接池连接返回时的重置策略",
+                  "title": "Pool Reset On Return"
+                },
+                "pool_timeout": {
+                  "type": "number",
+                  "description": "连接池获取连接的超时时间",
+                  "title": "Pool Timeout"
+                },
+                "pool_use_lifo": {
+                  "type": "boolean",
+                  "description": "是否使用 LIFO 策略获取连接",
+                  "title": "Pool Use Lifo"
+                },
+                "plugins": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "要加载的插件列表",
+                  "title": "Plugins"
+                },
+                "query_cache_size": {
+                  "type": "integer",
+                  "description": "查询缓存大小",
+                  "title": "Query Cache Size"
+                },
+                "use_insertmanyvalues": {
+                  "type": "boolean",
+                  "description": "启用 insertmanyvalues 执行风格，默认为 True",
+                  "title": "Use Insertmanyvalues"
+                },
+                "skip_autocommit_rollback": {
+                  "type": "boolean",
+                  "description": "如果为 True，则在自动提交模式下跳过回滚操作",
+                  "title": "Skip Autocommit Rollback"
+                },
+                "kwargs": {
+                  "type": "object",
+                  "additionalProperties": {},
+                  "description": "其他额外参数",
+                  "title": "Kwargs"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            },
+            "UrlInfo": {
+              "type": "object",
+              "title": "UrlInfo",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "default": "sqlite",
+                  "description": "数据库类型，默认为 sqlite",
+                  "title": "Type"
+                },
+                "name": {
+                  "type": "string",
+                  "default": "data.db",
+                  "description": "数据库名称/文件路径",
+                  "title": "Name"
+                },
+                "driver": {
+                  "type": "string",
+                  "default": "aiosqlite",
+                  "description": "数据库驱动，默认为 aiosqlite；其他类型的数据库驱动参考 SQLAlchemy 文档",
+                  "title": "Driver"
+                },
+                "host": {
+                  "type": "string",
+                  "description": "数据库主机地址。如果是 SQLite 数据库，此项可不填。",
+                  "title": "Host"
+                },
+                "port": {
+                  "type": "integer",
+                  "description": "数据库端口号。如果是 SQLite 数据库，此项可不填。",
+                  "title": "Port"
+                },
+                "username": {
+                  "type": "string",
+                  "description": "数据库用户名。如果是 SQLite 数据库，此项可不填。",
+                  "title": "Username"
+                },
+                "password": {
+                  "type": "string",
+                  "description": "数据库密码。如果是 SQLite 数据库，此项可不填。",
+                  "title": "Password"
+                },
+                "query": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "oneOf": [
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  "description": "数据库连接参数，默认为空字典。可以传入如 `{\"timeout\": \"30\"}` 的参数。",
+                  "title": "Query"
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "entari_plugin_user": {
+          "type": "object",
+          "title": "Config",
+          "properties": {
+            "user_token_prefix": {
+              "type": "string",
+              "default": "entari/",
+              "description": "生成令牌的前缀",
+              "title": "User Token Prefix"
+            },
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          },
+          "additionalProperties": false,
+          "description": "管理和绑定不同平台的用户"
+        },
+        ".record_message": {
+          "type": "object",
+          "title": "RecordConfig",
+          "properties": {
+            "to_me_only": {
+              "type": "boolean",
+              "default": false,
+              "description": "是否仅记录提及 Bot 自己的消息",
+              "title": "To Me Only"
+            },
+            "record_send": {
+              "type": "boolean",
+              "default": false,
+              "description": "是否记录发送的消息",
+              "title": "Record Send"
+            },
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          },
+          "additionalProperties": false,
+          "description": "将收到[和发出]的消息打印在日志中"
+        },
+        "::echo": {
+          "type": "object",
+          "description": "Echo the content; no configuration required",
+          "additionalProperties": true,
+          "properties": {
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          }
+        },
+        "::inspect": {
+          "type": "object",
+          "description": "Inspect on any user, group or channel; no configuration required",
+          "additionalProperties": true,
+          "properties": {
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          }
+        },
+        "::pipe": {
+          "type": "object",
+          "description": "一个允许用户通过管道符连接多个命令的插件。; no configuration required",
+          "additionalProperties": true,
+          "properties": {
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          }
+        },
+        "::control": {
+          "type": "object",
+          "description": "提供装饰器和工具函数以便于用户控制插件的可用性，比如在负载均衡，特定群下禁用插件等; no configuration required",
+          "additionalProperties": true,
+          "properties": {
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          }
+        },
+        "entari_plugin_server": {
+          "type": "object",
+          "title": "Config",
+          "properties": {
+            "direct_adapter": {
+              "type": "boolean",
+              "default": false,
+              "description": "是否使用直连适配器",
+              "title": "Direct Adapter"
+            },
+            "transfer_client": {
+              "type": "boolean",
+              "default": false,
+              "description": "是否将 Entari 客户端收到的事件转发给连接到 server 的其他 Satori 客户端",
+              "title": "Transfer Client"
+            },
+            "adapters": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              },
+              "title": "Adapters"
+            },
+            "host": {
+              "type": "string",
+              "default": "127.0.0.1",
+              "description": "服务器主机地址",
+              "title": "Host"
+            },
+            "port": {
+              "type": "integer",
+              "default": 5140,
+              "description": "服务器端口",
+              "title": "Port"
+            },
+            "path": {
+              "type": "string",
+              "default": "",
+              "description": "服务器部署路径",
+              "title": "Path"
+            },
+            "version": {
+              "type": "string",
+              "default": "v1",
+              "description": "服务器使用的协议版本",
+              "title": "Version"
+            },
+            "token": {
+              "type": "string",
+              "description": "服务器 Satori 接口的访问令牌，如果为 None 则不启用令牌验证",
+              "title": "Token"
+            },
+            "options": {
+              "$ref": "#/properties/plugins/properties/entari_plugin_server/$defs/UvicornOptions",
+              "description": "Uvicorn 的其他配置项",
+              "title": "Options"
+            },
+            "stream_threshold": {
+              "type": "integer",
+              "default": 16777216,
+              "description": "流式传输阈值，超过此大小将使用流式传输",
+              "title": "Stream Threshold"
+            },
+            "stream_chunk_size": {
+              "type": "integer",
+              "default": 65536,
+              "description": "流式传输分块大小，流式传输时每次发送的数据大小",
+              "title": "Stream Chunk Size"
+            },
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          },
+          "additionalProperties": false,
+          "description": "为 Entari 提供 Satori 服务器支持，基于此为 Entari 提供 ASGI 服务、适配器连接等功能",
+          "$defs": {
+            "UvicornOptions": {
+              "type": "object",
+              "title": "UvicornOptions",
+              "properties": {
+                "uds": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Bind to a UNIX domain socket. default: None",
+                  "title": "Uds"
+                },
+                "fd": {
+                  "oneOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Bind to socket from this file descriptor. default: None",
+                  "title": "Fd"
+                },
+                "loop": {
+                  "enum": [
+                    "none",
+                    "auto",
+                    "asyncio",
+                    "uvloop",
+                    "winloop"
+                  ],
+                  "description": "Event loop factory implementation. default: 'auto'",
+                  "title": "Loop"
+                },
+                "http": {
+                  "enum": [
+                    "auto",
+                    "h11",
+                    "httptools"
+                  ],
+                  "description": "HTTP protocol implementation. default: 'auto'",
+                  "title": "Http"
+                },
+                "ws": {
+                  "enum": [
+                    "auto",
+                    "none",
+                    "websockets",
+                    "websockets-sansio",
+                    "wsproto"
+                  ],
+                  "description": "WebSocket protocol implementation. default: 'auto'",
+                  "title": "Ws"
+                },
+                "ws_max_size": {
+                  "type": "integer",
+                  "description": "WebSocket max size message in bytes. default: 16 * 1024 * 1024",
+                  "title": "Ws Max Size"
+                },
+                "ws_max_queue": {
+                  "type": "integer",
+                  "description": "The maximum length of the WebSocket message queue. default: 32",
+                  "title": "Ws Max Queue"
+                },
+                "ws_ping_interval": {
+                  "oneOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "WebSocket ping interval in seconds. default: 20.0",
+                  "title": "Ws Ping Interval"
+                },
+                "ws_ping_timeout": {
+                  "oneOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "WebSocket ping timeout in seconds. default: 20.0",
+                  "title": "Ws Ping Timeout"
+                },
+                "ws_per_message_deflate": {
+                  "type": "boolean",
+                  "description": "WebSocket per-message-deflate compression. default: True",
+                  "title": "Ws Per Message Deflate"
+                },
+                "lifespan": {
+                  "enum": [
+                    "auto",
+                    "on",
+                    "off"
+                  ],
+                  "description": "Lifespan implementation. default: 'auto'",
+                  "title": "Lifespan"
+                },
+                "env_file": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Environment configuration file. default: None",
+                  "title": "Env File"
+                },
+                "log_config": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "additionalProperties": {}
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Logging configuration file. default: LOGGING_CONFIG",
+                  "title": "Log Config"
+                },
+                "log_level": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "default: None",
+                  "title": "Log Level"
+                },
+                "access_log": {
+                  "type": "boolean",
+                  "description": "Enable/Disable access log. default: True",
+                  "title": "Access Log"
+                },
+                "use_colors": {
+                  "oneOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Enable/Disable colorized logging. default: None",
+                  "title": "Use Colors"
+                },
+                "workers": {
+                  "oneOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Number of worker processes. \n\ndefault: the $WEB_CONCURRENCY environment variable if available, or 1.",
+                  "title": "Workers"
+                },
+                "proxy_headers": {
+                  "type": "boolean",
+                  "description": "Enable/Disable X-Forwarded-Proto, X-Forwarded-For to populate url scheme and remote address info. default: True",
+                  "title": "Proxy Headers"
+                },
+                "server_header": {
+                  "type": "boolean",
+                  "description": "Enable/Disable default Server header. default: True",
+                  "title": "Server Header"
+                },
+                "date_header": {
+                  "type": "boolean",
+                  "description": "Enable/Disable default Date header. default: True",
+                  "title": "Date Header"
+                },
+                "forwarded_allow_ips": {
+                  "oneOf": [
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Comma separated list of IP Addresses, IP Networks, or literals (e.g. UNIX Socket path) to trust with proxy headers.\n\ndefault: the $FORWARDED_ALLOW_IPS environment variable if available, or '127.0.0.1'.\n    The literal '*' means trust everything.",
+                  "title": "Forwarded Allow Ips"
+                },
+                "root_path": {
+                  "type": "string",
+                  "description": "Set the ASGI 'root_path' for applications submounted below a given URL path. default: ''",
+                  "title": "Root Path"
+                },
+                "limit_concurrency": {
+                  "oneOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Maximum number of concurrent connections or tasks to allow, before issuing HTTP 503 responses. default: None",
+                  "title": "Limit Concurrency"
+                },
+                "limit_max_requests": {
+                  "oneOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Maximum number of requests to service before terminating the process. default: None",
+                  "title": "Limit Max Requests"
+                },
+                "backlog": {
+                  "type": "integer",
+                  "description": "Maximum number of connections to hold in backlog. default: 2048",
+                  "title": "Backlog"
+                },
+                "timeout_keep_alive": {
+                  "type": "integer",
+                  "description": "Close Keep-Alive connections if no new data is received within this timeout (in seconds).default: 5",
+                  "title": "Timeout Keep Alive"
+                },
+                "timeout_notify": {
+                  "type": "integer",
+                  "description": "default: 30",
+                  "title": "Timeout Notify"
+                },
+                "timeout_graceful_shutdown": {
+                  "oneOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Maximum number of seconds to wait for graceful shutdown. default: None",
+                  "title": "Timeout Graceful Shutdown"
+                },
+                "ssl_keyfile": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "SSL key file. default: None",
+                  "title": "Ssl Keyfile"
+                },
+                "ssl_certfile": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "SSL certificate file. default: None",
+                  "title": "Ssl Certfile"
+                },
+                "ssl_keyfile_password": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "SSL keyfile password. default: None",
+                  "title": "Ssl Keyfile Password"
+                },
+                "ssl_version": {
+                  "type": "integer",
+                  "description": "SSL version to use (see stdlib ssl module's). default: ssl.PROTOCOL_TLS",
+                  "title": "Ssl Version"
+                },
+                "ssl_cert_reqs": {
+                  "type": "integer",
+                  "description": "Whether client certificate is required (see stdlib ssl module's). default: ssl.CERT_NONE",
+                  "title": "Ssl Cert Reqs"
+                },
+                "ssl_ca_certs": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "CA certificates file. default: None",
+                  "title": "Ssl Ca Certs"
+                },
+                "ssl_ciphers": {
+                  "type": "string",
+                  "description": "Ciphers to use (see stdlib ssl module's). default: 'TLSv1'",
+                  "title": "Ssl Ciphers"
+                },
+                "headers": {
+                  "oneOf": [
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "array",
+                        "prefixItems": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "string"
+                          }
+                        ],
+                        "minItems": 2,
+                        "maxItems": 2
+                      }
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Specify custom default HTTP response headers as a Name:Value pair. default: None",
+                  "title": "Headers"
+                },
+                "h11_max_incomplete_event_size": {
+                  "oneOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "For h11, the maximum number of bytes to buffer of an incomplete event. default: None",
+                  "title": "H11 Max Incomplete Event Size"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          }
+        },
+        "entari_plugin_arkgacha": {
+          "type": "object",
+          "title": "Config",
+          "properties": {
+            "command": {
+              "type": "string",
+              "default": "方舟抽卡",
+              "description": "抽卡命令，默认为“方舟抽卡”，可以修改为其他命令，但请确保不与其他插件冲突",
+              "title": "Command"
+            },
+            "shortcut": {
+              "$ref": "#/properties/plugins/properties/entari_plugin_arkgacha/$defs/Shortcut",
+              "title": "Shortcut"
+            },
+            "gacha_max": {
+              "type": "integer",
+              "default": 300,
+              "description": "单次抽卡最大次数，防止刷屏",
+              "title": "Gacha Max"
+            },
+            "pure_text": {
+              "type": "boolean",
+              "default": false,
+              "description": "是否只使用纯文本输出，关闭图片输出以节省资源",
+              "title": "Pure Text"
+            },
+            "pool_file": {
+              "type": "string",
+              "default": "",
+              "description": "卡池文件路径，留空则使用默认路径",
+              "title": "Pool File"
+            },
+            "proxy": {
+              "type": "string",
+              "description": "HTTP代理",
+              "title": "Proxy"
+            },
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          },
+          "additionalProperties": false,
+          "description": "明模拟日方舟抽卡功能，支持模拟十连",
+          "$defs": {
+            "Shortcut": {
+              "type": "object",
+              "title": "Shortcut",
+              "properties": {
+                "simulate": {
+                  "type": "string",
+                  "default": "方舟十连",
+                  "title": "Simulate"
+                },
+                "update": {
+                  "type": "string",
+                  "default": "方舟卡池更新",
+                  "title": "Update"
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "entari_plugin_llm": {
+          "type": "object",
+          "title": "Config",
+          "properties": {
+            "api_key": {
+              "type": "string",
+              "description": "用于使用 OpenAI API 进行身份验证的全局 API 密钥。用作没有特定键的模型的后备",
+              "title": "Api Key"
+            },
+            "base_url": {
+              "type": "string",
+              "default": "https://api.openai.com/v1",
+              "description": "OpenAI API 的全局接口地址。用作没有特定接口地址的模型的后备",
+              "title": "Base Url"
+            },
+            "prompt": {
+              "type": "string",
+              "default": "",
+              "description": "全局提示词。用作没有特定提示词的模型的后备",
+              "title": "Prompt"
+            },
+            "models": {
+              "type": "array",
+              "items": {
+                "$ref": "#/properties/plugins/properties/entari_plugin_llm/$defs/ScopedModel"
+              },
+              "title": "Models"
+            },
+            "toolcall_max_steps": {
+              "type": "integer",
+              "default": 8,
+              "description": "单个会话中工具调用的最大步骤数",
+              "title": "Toolcall Max Steps"
+            },
+            "context_length": {
+              "type": "integer",
+              "default": 50,
+              "description": "上下文长度",
+              "title": "Context Length"
+            },
+            "tools": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "additionalProperties": {}
+              },
+              "title": "Tools"
+            },
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          },
+          "additionalProperties": true,
+          "description": "一个通用的 LLM 工具箱插件，提供了丰富的工具和模型配置选项，支持多种 LLM 模型。",
+          "$defs": {
+            "ScopedModel": {
+              "type": "object",
+              "title": "ScopedModel",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "用于 OpenAI API 的模型",
+                  "title": "Name"
+                },
+                "alias": {
+                  "type": "string",
+                  "description": "模型的别名",
+                  "title": "Alias"
+                },
+                "api_key": {
+                  "type": "string",
+                  "description": "用于使用 OpenAI API 进行身份验证的 API 密钥。如果未设置，则回退到全局 api_key",
+                  "title": "Api Key"
+                },
+                "base_url": {
+                  "type": "string",
+                  "default": "https://api.openai.com/v1",
+                  "description": "OpenAI API 的接口地址。如果未设置，则回退到全局 base_url",
+                  "title": "Base Url"
+                },
+                "prompt": {
+                  "type": "string",
+                  "default": "",
+                  "description": "该模型使用的提示词。如果未设置，则回退到全局 prompt",
+                  "title": "Prompt"
+                },
+                "extra": {
+                  "type": "object",
+                  "additionalProperties": {},
+                  "title": "Extra"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "coc": {
+          "type": "object",
+          "description": "骰娘功能; no configuration required",
+          "additionalProperties": true,
+          "properties": {
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          }
+        },
+        "copper": {
+          "type": "object",
+          "description": "模拟界园投钱; no configuration required",
+          "additionalProperties": true,
+          "properties": {
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          }
+        },
+        "dialog": {
+          "type": "object",
+          "title": "DialogConfig",
+          "properties": {
+            "nickname": {
+              "type": "string",
+              "description": "触发对话的昵称, 例如 \"小爱同学\" ",
+              "title": "Nickname"
+            },
+            "random": {
+              "type": "boolean",
+              "default": false,
+              "description": "是否随机选择回复, False 则一定会回复消息",
+              "title": "Random"
+            },
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          },
+          "required": [
+            "nickname"
+          ],
+          "additionalProperties": false,
+          "description": "对话插件配置"
+        },
+        "draw": {
+          "type": "object",
+          "description": "每天一次的抽签，包含大凶、凶、末吉、小吉、中吉、吉、大吉七种结果，每种结果对应一首诗; no configuration required",
+          "additionalProperties": true,
+          "properties": {
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          }
+        },
+        "greet": {
+          "type": "object",
+          "description": "问候; no configuration required",
+          "additionalProperties": true,
+          "properties": {
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          }
+        },
+        "guess_operator": {
+          "type": "object",
+          "description": "明日方舟猜干员; no configuration required",
+          "additionalProperties": true,
+          "properties": {
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          }
+        },
+        "help": {
+          "type": "object",
+          "description": "No configuration required",
+          "additionalProperties": true,
+          "properties": {
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          }
+        },
+        "ill": {
+          "type": "object",
+          "description": "根据指定模板生成发病语录; no configuration required",
+          "additionalProperties": true,
+          "properties": {
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          }
+        },
+        "marry": {
+          "type": "object",
+          "description": "结婚; no configuration required",
+          "additionalProperties": true,
+          "properties": {
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          }
+        },
+        "music": {
+          "type": "object",
+          "description": "点歌; no configuration required",
+          "additionalProperties": true,
+          "properties": {
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          }
+        },
+        "petpet": {
+          "type": "object",
+          "description": "摸头; no configuration required",
+          "additionalProperties": true,
+          "properties": {
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          }
+        },
+        "random_operator": {
+          "type": "object",
+          "description": "根据名字随机生成一个干员信息; no configuration required",
+          "additionalProperties": true,
+          "properties": {
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          }
+        },
+        "sign": {
+          "type": "object",
+          "title": "SignConfig",
+          "properties": {
+            "max": {
+              "type": "integer",
+              "default": 200,
+              "description": "信赖最大值",
+              "title": "Max"
+            },
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          },
+          "additionalProperties": false,
+          "description": "每天一次的签到，签到后可以获得信赖值，信赖值可以改变对话的语气"
+        },
+        "sk_autosign": {
+          "type": "object",
+          "description": "每天 0:30 开始自动签到，若与绑定者为好友则同时会私聊通知签到结果; no configuration required",
+          "additionalProperties": true,
+          "properties": {
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          }
+        },
+        "status": {
+          "type": "object",
+          "title": "StatusConfig",
+          "properties": {
+            "truncate": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether to render the status template with used variables only.",
+              "title": "Truncate"
+            },
+            "template": {
+              "type": "string",
+              "default": "PID: {{ '%d' % pid }}\nPython 版本: {{ python_version }}\n系统版本: {{ system_version }}\n\nCPU 核心数: {{ '%d' % cpu_count }}\nCPU 占用率: {{ '%02d' % cpu_usage }}%\n\n内存占用: {{ '%02d' % memory_usage.percent }}%\n程序运行时间: {{ runtime | relative_time | humanize_delta }}\n机器运行时间: {{ uptime | relative_time | humanize_delta }}\n{% if swap_usage.total %}交换内存: {{ '%d' % swap_usage.percent }}%{% endif +%}\n磁盘占用:\n{% for name, usage in disk_usage.items() %}\n  {{ name }}: {{ '%02d' % usage.percent }}%\n{% endfor %}",
+              "description": "Default server status template.\n\nIncluding:\n\n- CPU usage\n- Memory usage\n- Runtime\n- Uptime\n- Swap usage\n- Disk usage",
+              "title": "Template"
+            },
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          },
+          "additionalProperties": false,
+          "description": "状态"
+        },
+        "weather": {
+          "$defs": {
+            "HourlyType": {
+              "enum": [
+                1,
+                2
+              ],
+              "title": "HourlyType",
+              "type": "integer"
+            }
+          },
+          "description": "和风天气",
+          "properties": {
+            "apihost": {
+              "default": "https://api.qweather.com",
+              "title": "Apihost",
+              "type": "string"
+            },
+            "apikey": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "deprecated": true,
+              "title": "Apikey"
+            },
+            "apitype": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Apitype"
+            },
+            "hourlytype": {
+              "$ref": "#/properties/plugins/properties/weather/$defs/HourlyType",
+              "default": 1
+            },
+            "forecase_days": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": 3,
+              "title": "Forecase Days"
+            },
+            "use_jwt": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": true,
+              "description": "是否使用 JWT，默认 True",
+              "title": "Use Jwt"
+            },
+            "jwt_sub": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "JWT sub，即控制台中的项目ID",
+              "title": "Jwt Sub"
+            },
+            "jwt_private_key": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "deprecated": true,
+              "title": "Jwt Private Key"
+            },
+            "jwt_kid": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "JWT Key ID，即控制台中上传公钥后即可获取",
+              "title": "Jwt Kid"
+            },
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          },
+          "title": "QWeatherConfig",
+          "type": "object"
+        },
+        "weibo": {
+          "type": "object",
+          "title": "Config",
+          "properties": {
+            "cookie": {
+              "type": "string",
+              "default": "",
+              "description": "微博 Cookie, 用于获取用户信息和动态。可电脑访问微博网页端后获取",
+              "title": "Cookie"
+            },
+            "user_agent": {
+              "type": "string",
+              "default": "",
+              "description": "用户代理, 用于获取用户信息和动态。可电脑访问微博网页端后获取",
+              "title": "User Agent"
+            },
+            "forward_post": {
+              "oneOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "boolean"
+                  }
+                }
+              ],
+              "default": false,
+              "description": "动态推送是否使用合并转发, 可为每个平台独立设置",
+              "title": "Forward Post"
+            },
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          },
+          "additionalProperties": false,
+          "description": "简易的微博功能插件, 包括微博动态、微博用户信息等功能"
+        },
+        ".commands": {
+          "type": "object",
+          "title": "CommandsConfig",
+          "properties": {
+            "block": {
+              "type": "boolean",
+              "default": true,
+              "description": "是否阻断消息传播",
+              "title": "Block"
+            },
+            "need_notice_me": {
+              "type": "boolean",
+              "default": false,
+              "description": "是否需要通知我",
+              "title": "Need Notice Me"
+            },
+            "need_reply_me": {
+              "type": "boolean",
+              "default": false,
+              "description": "是否需要回复我",
+              "title": "Need Reply Me"
+            },
+            "use_config_prefix": {
+              "type": "boolean",
+              "default": true,
+              "description": "是否使用配置前缀",
+              "title": "Use Config Prefix"
+            },
+            "ignore_prefix_filter": {
+              "type": "string",
+              "description": "前缀过滤条件，使用过滤器语法，默认为私聊消息不使用前缀",
+              "title": "Ignore Prefix Filter"
+            },
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Commands Plugin"
+        },
+        ".scheduler": {
+          "type": "object",
+          "description": "Simple Scheduler with interval / crontab task; no configuration required",
+          "additionalProperties": true,
+          "properties": {
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          }
+        },
+        ".localdata": {
+          "type": "object",
+          "title": "Config",
+          "properties": {
+            "use_global": {
+              "type": "boolean",
+              "default": false,
+              "description": "是否使用全局数据目录",
+              "title": "Use Global"
+            },
+            "app_name": {
+              "type": "string",
+              "default": "entari",
+              "description": "应用名称",
+              "title": "App Name"
+            },
+            "base_dir": {
+              "type": "string",
+              "description": "基础目录，默认为空，表示使用 `app_name` 作为目录名，",
+              "title": "Base Dir"
+            },
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Data store interface with local directories"
+        }
+      }
+    },
+    "adapters": {
+      "type": "array",
+      "description": "Adapter configurations",
+      "items": {
+        "type": "object",
+        "description": "Adapter configuration",
+        "properties": {
+          "$path": {
+            "type": "string",
+            "description": "Adapter Module Path"
+          }
+        },
+        "required": [
+          "$path"
+        ],
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "basic"
+  ]
+}

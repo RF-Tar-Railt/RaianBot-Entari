@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "StatusConfig",
+  "properties": {
+    "truncate": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to render the status template with used variables only.",
+      "title": "Truncate"
+    },
+    "template": {
+      "type": "string",
+      "default": "PID: {{ '%d' % pid }}\nPython 版本: {{ python_version }}\n系统版本: {{ system_version }}\n\nCPU 核心数: {{ '%d' % cpu_count }}\nCPU 占用率: {{ '%02d' % cpu_usage }}%\n\n内存占用: {{ '%02d' % memory_usage.percent }}%\n程序运行时间: {{ runtime | relative_time | humanize_delta }}\n机器运行时间: {{ uptime | relative_time | humanize_delta }}\n{% if swap_usage.total %}交换内存: {{ '%d' % swap_usage.percent }}%{% endif +%}\n磁盘占用:\n{% for name, usage in disk_usage.items() %}\n  {{ name }}: {{ '%02d' % usage.percent }}%\n{% endfor %}",
+      "description": "Default server status template.\n\nIncluding:\n\n- CPU usage\n- Memory usage\n- Runtime\n- Uptime\n- Swap usage\n- Disk usage",
+      "title": "Template"
+    },
+    "$disable": {
+      "type": "string",
+      "description": "Expression for whether disable this plugin"
+    },
+    "$priority": {
+      "type": "integer",
+      "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+    },
+    "$filter": {
+      "type": "string",
+      "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+    },
+    "$optional": {
+      "type": "boolean",
+      "description": "Whether this plugin is optional"
+    }
+  },
+  "additionalProperties": false,
+  "description": "状态"
+}

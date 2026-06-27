@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "SignConfig",
+  "properties": {
+    "max": {
+      "type": "integer",
+      "default": 200,
+      "description": "信赖最大值",
+      "title": "Max"
+    },
+    "$disable": {
+      "type": "string",
+      "description": "Expression for whether disable this plugin"
+    },
+    "$priority": {
+      "type": "integer",
+      "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+    },
+    "$filter": {
+      "type": "string",
+      "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+    },
+    "$optional": {
+      "type": "boolean",
+      "description": "Whether this plugin is optional"
+    }
+  },
+  "additionalProperties": false,
+  "description": "每天一次的签到，签到后可以获得信赖值，信赖值可以改变对话的语气"
+}

@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "HourlyType": {
+      "enum": [
+        1,
+        2
+      ],
+      "title": "HourlyType",
+      "type": "integer"
+    }
+  },
+  "description": "和风天气",
+  "properties": {
+    "apihost": {
+      "default": "https://api.qweather.com",
+      "title": "Apihost",
+      "type": "string"
+    },
+    "apikey": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "deprecated": true,
+      "title": "Apikey"
+    },
+    "apitype": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Apitype"
+    },
+    "hourlytype": {
+      "$ref": "#/$defs/HourlyType",
+      "default": 1
+    },
+    "forecase_days": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": 3,
+      "title": "Forecase Days"
+    },
+    "use_jwt": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": true,
+      "description": "是否使用 JWT，默认 True",
+      "title": "Use Jwt"
+    },
+    "jwt_sub": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "JWT sub，即控制台中的项目ID",
+      "title": "Jwt Sub"
+    },
+    "jwt_private_key": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "deprecated": true,
+      "title": "Jwt Private Key"
+    },
+    "jwt_kid": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "JWT Key ID，即控制台中上传公钥后即可获取",
+      "title": "Jwt Kid"
+    },
+    "$disable": {
+      "type": "string",
+      "description": "Expression for whether disable this plugin"
+    },
+    "$priority": {
+      "type": "integer",
+      "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+    },
+    "$filter": {
+      "type": "string",
+      "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+    },
+    "$optional": {
+      "type": "boolean",
+      "description": "Whether this plugin is optional"
+    }
+  },
+  "title": "QWeatherConfig",
+  "type": "object"
+}

@@ -1,0 +1,14 @@
+# $schema: weather.schema.json
+## 和风天气API 的 key
+## 获取地址: https://id.qweather.com/#/login
+apikey: ${{ env.HWEATHER_API_KEY }}
+## 和风天气API 的类型
+##  0 = 普通版，免费订阅 (3 天天气预报)
+##  1 = 个人开发版，标准订阅 (7 天天气预报)
+##  2 = 商业版 (7 天天气预报)
+apitype: 0
+## 和风天气API 的逐小时类型
+## 1 = 未来12小时 (默认值)
+## 2 = 未来24小时
+hourlytype: 1
+use_jwt: false

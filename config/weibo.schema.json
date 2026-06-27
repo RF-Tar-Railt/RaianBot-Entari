@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "Config",
+  "properties": {
+    "cookie": {
+      "type": "string",
+      "default": "",
+      "description": "微博 Cookie, 用于获取用户信息和动态。可电脑访问微博网页端后获取",
+      "title": "Cookie"
+    },
+    "user_agent": {
+      "type": "string",
+      "default": "",
+      "description": "用户代理, 用于获取用户信息和动态。可电脑访问微博网页端后获取",
+      "title": "User Agent"
+    },
+    "forward_post": {
+      "oneOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "object",
+          "additionalProperties": {
+            "type": "boolean"
+          }
+        }
+      ],
+      "default": false,
+      "description": "动态推送是否使用合并转发, 可为每个平台独立设置",
+      "title": "Forward Post"
+    },
+    "$disable": {
+      "type": "string",
+      "description": "Expression for whether disable this plugin"
+    },
+    "$priority": {
+      "type": "integer",
+      "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+    },
+    "$filter": {
+      "type": "string",
+      "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+    },
+    "$optional": {
+      "type": "boolean",
+      "description": "Whether this plugin is optional"
+    }
+  },
+  "additionalProperties": false,
+  "description": "简易的微博功能插件, 包括微博动态、微博用户信息等功能"
+}
