@@ -17,6 +17,7 @@ basic:
     milky: ['${{ env.MASTER_QQ }}']
     onebot: ['${{ env.MASTER_QQ }}']
     qq: ['${{ env.MASTER_QQ_OPENID }}']
+
 adapters:
 ## 接入 onebot11 就把下面的注释去掉，接入 milky 就把下面的注释去掉
 #  - $path: '@onebot11.reverse'
@@ -34,39 +35,55 @@ adapters:
       at_messages: false
       c2c_group_at_messages: true
     is_sandbox: false
+
 plugins:
+
   $files:
     - "./config"
+
   $prefix:
     - key: ""
       plugins:
         - core
     - key: "plugins."
       plugins: "./config"
-  core:
-    tencentcloud:
-      region: ap-guangzhou
-      secret_id: ${{ env.TENCENTCLOUD_SECRET_ID }}
-      secret_key: ${{ env.TENCENTCLOUD_SECRET_KEY }}
-      bucket: ${{ env.TENCENTCLOUD_BUCKET }}
-      custom_domain: ${{ env.TENCENTCLOUD_CUSTOM_DOMAIN }}
+
+  $prelude:
+    - ::auto_reload
 
   .record_message: {}
+  .localdata:
+    $priority: 1
+    app_name: raianbot
+
   ::echo: {}
   ::inspect: {}
   ::pipe: {}
   ::control: {}
+  ::auto_reload:
+    watch_dirs: [.]
+    watch_config: true
+    $disable: env.ENVIRONMENT != "dev"
+
   entari_plugin_browser:
     channel: chrome
+
   entari_plugin_server:
     host: ${{ env.ENTARI_SERVER_HOST }}
     port: ${{ env.ENTARI_SERVER_PORT }}
     path: "satori"
     direct_adapter: true
-  entari_plugin_database: {}
+
+  entari_plugin_database:
+    type: sqlite
+    driver: aiosqlite
+    name: .raianbot/data.db
+
   entari_plugin_user: {}
+
   entari_plugin_arkgacha:
     command: 抽卡
+
   entari_plugin_llm:
     models:
       - name: "deepseek/deepseek-v4-flash"
@@ -83,3 +100,11 @@ plugins:
           你与当前对话者的亲密度为 {trust} (百分制)
     .handlers.chat:
       $disable: true
+
+  core:
+    tencentcloud:
+      region: ap-guangzhou
+      secret_id: ${{ env.TENCENTCLOUD_SECRET_ID }}
+      secret_key: ${{ env.TENCENTCLOUD_SECRET_KEY }}
+      bucket: ${{ env.TENCENTCLOUD_BUCKET }}
+      custom_domain: ${{ env.TENCENTCLOUD_CUSTOM_DOMAIN }}

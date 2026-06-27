@@ -1,19 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
-  "title": "DialogConfig",
+  "description": "通用模板对话; no configuration required",
+  "additionalProperties": true,
   "properties": {
-    "nickname": {
-      "type": "string",
-      "description": "触发对话的昵称, 例如 \"小爱同学\" ",
-      "title": "Nickname"
-    },
-    "random": {
-      "type": "boolean",
-      "default": false,
-      "description": "是否随机选择回复, False 则一定会回复消息",
-      "title": "Random"
-    },
     "$disable": {
       "type": "string",
       "description": "Expression for whether disable this plugin"
@@ -30,10 +20,5 @@
       "type": "boolean",
       "description": "Whether this plugin is optional"
     }
-  },
-  "required": [
-    "nickname"
-  ],
-  "additionalProperties": false,
-  "description": "对话插件配置"
+  }
 }

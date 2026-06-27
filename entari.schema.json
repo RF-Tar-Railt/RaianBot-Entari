@@ -368,32 +368,35 @@
           "default": [],
           "uniqueItems": true
         },
-        "core": {
+        "::auto_reload": {
           "type": "object",
-          "title": "CoreConfig",
+          "title": "Config",
           "properties": {
-            "tencentcloud": {
-              "$ref": "#/properties/plugins/properties/core/$defs/TencentCloudConfig",
-              "description": "腾讯云API 配置",
-              "title": "Tencentcloud"
+            "watch_dirs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "需要监视的目录列表，支持相对路径和绝对路径",
+              "title": "Watch Dirs"
             },
-            "cos_convert": {
-              "type": "boolean",
-              "default": true,
-              "description": "是否启用COS转换功能, 开启后会将发送的 bytes 图片上传到COS并转换为URL发送,\n以解决部分平台不支持直接发送bytes图片的问题",
-              "title": "Cos Convert"
-            },
-            "long_message_forward": {
+            "watch_config": {
               "type": "boolean",
               "default": false,
-              "description": "是否启用长消息转发功能, 开启后会将发送的长文本消息拆分为多条消息发送, 以解决部分平台不支持发送长文本的问题",
-              "title": "Long Message Forward"
+              "description": "是否监视配置文件的变化，默认为 False",
+              "title": "Watch Config"
             },
-            "qq_markdown": {
-              "type": "boolean",
-              "default": true,
-              "description": "是否启用QQ Markdown功能, 开启后会将发送的消息转换为 QQ Markdown 格式发送",
-              "title": "Qq Markdown"
+            "debounce": {
+              "type": "integer",
+              "default": 1600,
+              "description": "防抖时间，单位为毫秒，防止频繁变动导致的重复加载，默认为 1600 毫秒",
+              "title": "Debounce"
+            },
+            "step": {
+              "type": "integer",
+              "default": 50,
+              "description": "轮询间隔，单位为毫秒，默认为 50 毫秒",
+              "title": "Step"
             },
             "$disable": {
               "type": "string",
@@ -408,49 +411,151 @@
               "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
             }
           },
-          "required": [
-            "tencentcloud"
-          ],
           "additionalProperties": false,
-          "description": "机器人核心功能, 包括腾讯云API的相关功能",
-          "$defs": {
-            "TencentCloudConfig": {
-              "type": "object",
-              "title": "TencentCloudConfig",
-              "properties": {
-                "region": {
-                  "type": "string",
-                  "description": "腾讯云API 的 region",
-                  "title": "Region"
-                },
-                "secret_id": {
-                  "type": "string",
-                  "description": "腾讯云API 的 secret-id",
-                  "title": "Secret Id"
-                },
-                "secret_key": {
-                  "type": "string",
-                  "description": "腾讯云API 的 secret-key",
-                  "title": "Secret Key"
-                },
-                "bucket": {
-                  "type": "string",
-                  "description": "腾讯云API 下 COS 的 bucket",
-                  "title": "Bucket"
-                },
-                "custom_domain": {
-                  "type": "string",
-                  "description": "腾讯云API 下 COS 的自定义域名",
-                  "title": "Custom Domain"
-                }
-              },
-              "required": [
-                "region",
-                "secret_id",
-                "secret_key",
-                "bucket"
-              ],
-              "additionalProperties": false
+          "description": "自动监视指定目录下的 Python 或配置文件变化并重新加载对应插件"
+        },
+        ".localdata": {
+          "type": "object",
+          "title": "Config",
+          "properties": {
+            "use_global": {
+              "type": "boolean",
+              "default": false,
+              "description": "是否使用全局数据目录",
+              "title": "Use Global"
+            },
+            "app_name": {
+              "type": "string",
+              "default": "entari",
+              "description": "应用名称",
+              "title": "App Name"
+            },
+            "base_dir": {
+              "type": "string",
+              "description": "基础目录，默认为空，表示使用 `app_name` 作为目录名，",
+              "title": "Base Dir"
+            },
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Data store interface with local directories"
+        },
+        ".record_message": {
+          "type": "object",
+          "title": "RecordConfig",
+          "properties": {
+            "to_me_only": {
+              "type": "boolean",
+              "default": false,
+              "description": "是否仅记录提及 Bot 自己的消息",
+              "title": "To Me Only"
+            },
+            "record_send": {
+              "type": "boolean",
+              "default": false,
+              "description": "是否记录发送的消息",
+              "title": "Record Send"
+            },
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          },
+          "additionalProperties": false,
+          "description": "将收到[和发出]的消息打印在日志中"
+        },
+        "::echo": {
+          "type": "object",
+          "description": "Echo the content; no configuration required",
+          "additionalProperties": true,
+          "properties": {
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          }
+        },
+        "::inspect": {
+          "type": "object",
+          "description": "Inspect on any user, group or channel; no configuration required",
+          "additionalProperties": true,
+          "properties": {
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          }
+        },
+        "::pipe": {
+          "type": "object",
+          "description": "一个允许用户通过管道符连接多个命令的插件。; no configuration required",
+          "additionalProperties": true,
+          "properties": {
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          }
+        },
+        "::control": {
+          "type": "object",
+          "description": "提供装饰器和工具函数以便于用户控制插件的可用性，比如在负载均衡，特定群下禁用插件等; no configuration required",
+          "additionalProperties": true,
+          "properties": {
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
             }
           }
         },
@@ -1046,551 +1151,6 @@
             }
           }
         },
-        "entari_plugin_database": {
-          "type": "object",
-          "title": "Config",
-          "properties": {
-            "type": {
-              "type": "string",
-              "default": "sqlite",
-              "description": "数据库类型，默认为 sqlite",
-              "title": "Type"
-            },
-            "name": {
-              "type": "string",
-              "default": "data.db",
-              "description": "数据库名称/文件路径",
-              "title": "Name"
-            },
-            "driver": {
-              "type": "string",
-              "default": "aiosqlite",
-              "description": "数据库驱动，默认为 aiosqlite；其他类型的数据库驱动参考 SQLAlchemy 文档",
-              "title": "Driver"
-            },
-            "host": {
-              "type": "string",
-              "description": "数据库主机地址。如果是 SQLite 数据库，此项可不填。",
-              "title": "Host"
-            },
-            "port": {
-              "type": "integer",
-              "description": "数据库端口号。如果是 SQLite 数据库，此项可不填。",
-              "title": "Port"
-            },
-            "username": {
-              "type": "string",
-              "description": "数据库用户名。如果是 SQLite 数据库，此项可不填。",
-              "title": "Username"
-            },
-            "password": {
-              "type": "string",
-              "description": "数据库密码。如果是 SQLite 数据库，此项可不填。",
-              "title": "Password"
-            },
-            "query": {
-              "type": "object",
-              "additionalProperties": {
-                "oneOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  {
-                    "type": "string"
-                  }
-                ]
-              },
-              "description": "数据库连接参数，默认为空字典。可以传入如 `{\"timeout\": \"30\"}` 的参数。",
-              "title": "Query"
-            },
-            "options": {
-              "$ref": "#/properties/plugins/properties/entari_plugin_database/$defs/EngineOptions",
-              "description": "数据库连接选项，默认为 `{\"echo\": None, \"pool_pre_ping\": True}`",
-              "title": "Options"
-            },
-            "session_options": {
-              "type": "object",
-              "additionalProperties": {},
-              "description": "数据库会话选项，默认为 None。可以传入如 `{\"expire_on_commit\": False}` 的字典。",
-              "title": "Session Options"
-            },
-            "binds": {
-              "type": "object",
-              "additionalProperties": {
-                "$ref": "#/properties/plugins/properties/entari_plugin_database/$defs/UrlInfo"
-              },
-              "description": "数据库绑定配置，默认为 None。可以传入如 `{\"bind1\": UrlInfo(...), \"bind2\": UrlInfo(...)}` 的字典。",
-              "title": "Binds"
-            },
-            "create_table_at": {
-              "enum": [
-                "preparing",
-                "prepared",
-                "blocking"
-              ],
-              "default": "preparing",
-              "description": "在指定阶段创建数据库表，默认为 'preparing'。可选值为 'preparing', 'prepared', 'blocking'。",
-              "title": "Create Table At"
-            },
-            "$disable": {
-              "type": "string",
-              "description": "Expression for whether disable this plugin"
-            },
-            "$priority": {
-              "type": "integer",
-              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
-            },
-            "$filter": {
-              "type": "string",
-              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
-            }
-          },
-          "additionalProperties": false,
-          "description": "基于 SQLAlchemy 的数据库服务插件",
-          "$defs": {
-            "ResetStyle": {
-              "title": "Resetstyle",
-              "enum": [
-                0,
-                1,
-                2
-              ]
-            },
-            "EngineOptions": {
-              "type": "object",
-              "title": "EngineOptions",
-              "properties": {
-                "connect_args": {
-                  "type": "object",
-                  "additionalProperties": {},
-                  "description": "传递给数据库驱动的连接参数字典",
-                  "title": "Connect Args"
-                },
-                "echo": {
-                  "oneOf": [
-                    {
-                      "type": "null"
-                    },
-                    {
-                      "type": "boolean"
-                    },
-                    {
-                      "const": "debug"
-                    }
-                  ],
-                  "description": "如果为 True，启用 SQL 语句日志记录；如果为 \"debug\"，则记录更详细的调试信息",
-                  "title": "Echo"
-                },
-                "echo_pool": {
-                  "oneOf": [
-                    {
-                      "type": "null"
-                    },
-                    {
-                      "type": "boolean"
-                    },
-                    {
-                      "const": "debug"
-                    }
-                  ],
-                  "description": "如果为 True，启用连接池日志记录；如果为 \"debug\"，则记录更详细的调试信息",
-                  "title": "Echo Pool"
-                },
-                "enable_from_linting": {
-                  "type": "boolean",
-                  "description": "启用 FROM 子句检查，默认为 True",
-                  "title": "Enable From Linting"
-                },
-                "execution_options": {
-                  "type": "object",
-                  "additionalProperties": {},
-                  "description": "执行选项字典",
-                  "title": "Execution Options"
-                },
-                "future": {
-                  "const": true,
-                  "description": "使用 2.0 风格的 Engine 和 Connection API",
-                  "title": "Future"
-                },
-                "hide_parameters": {
-                  "type": "boolean",
-                  "description": "如果为 True，日志中不显示 SQL 参数",
-                  "title": "Hide Parameters"
-                },
-                "implicit_returning": {
-                  "const": true,
-                  "description": "启用隐式返回，默认为 True",
-                  "title": "Implicit Returning"
-                },
-                "insertmanyvalues_page_size": {
-                  "type": "integer",
-                  "description": "每页插入的行数，默认为 1000",
-                  "title": "Insertmanyvalues Page Size"
-                },
-                "isolation_level": {
-                  "enum": [
-                    "SERIALIZABLE",
-                    "REPEATABLE READ",
-                    "READ COMMITTED",
-                    "READ UNCOMMITTED",
-                    "AUTOCOMMIT"
-                  ],
-                  "description": "设置连接的隔离级别",
-                  "title": "Isolation Level"
-                },
-                "label_length": {
-                  "oneOf": [
-                    {
-                      "type": "integer"
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ],
-                  "description": "限制动态生成的列标签的长度",
-                  "title": "Label Length"
-                },
-                "logging_name": {
-                  "type": "string",
-                  "description": "日志记录名称",
-                  "title": "Logging Name"
-                },
-                "max_identifier_length": {
-                  "oneOf": [
-                    {
-                      "type": "integer"
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ],
-                  "description": "最大标识符长度",
-                  "title": "Max Identifier Length"
-                },
-                "max_overflow": {
-                  "type": "integer",
-                  "description": "连接池的最大溢出连接数",
-                  "title": "Max Overflow"
-                },
-                "module": {
-                  "oneOf": [
-                    {},
-                    {
-                      "type": "null"
-                    }
-                  ],
-                  "description": "数据库驱动模块",
-                  "title": "Module"
-                },
-                "paramstyle": {
-                  "oneOf": [
-                    {
-                      "enum": [
-                        "qmark",
-                        "numeric",
-                        "named",
-                        "format",
-                        "pyformat",
-                        "numeric_dollar"
-                      ]
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ],
-                  "description": "参数样式",
-                  "title": "Paramstyle"
-                },
-                "pool_logging_name": {
-                  "type": "string",
-                  "description": "连接池日志记录名称",
-                  "title": "Pool Logging Name"
-                },
-                "pool_pre_ping": {
-                  "type": "boolean",
-                  "description": "启用连接池预检测，默认为 True",
-                  "title": "Pool Pre Ping"
-                },
-                "pool_size": {
-                  "type": "integer",
-                  "description": "连接池大小",
-                  "title": "Pool Size"
-                },
-                "pool_recycle": {
-                  "type": "integer",
-                  "description": "连接池连接的最大重用时间",
-                  "title": "Pool Recycle"
-                },
-                "pool_reset_on_return": {
-                  "oneOf": [
-                    {
-                      "anyOf": [
-                        {
-                          "$ref": "#/properties/plugins/properties/entari_plugin_database/$defs/ResetStyle"
-                        },
-                        {
-                          "enum": [
-                            "commit",
-                            "rollback"
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "boolean"
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ],
-                  "description": "连接池连接返回时的重置策略",
-                  "title": "Pool Reset On Return"
-                },
-                "pool_timeout": {
-                  "type": "number",
-                  "description": "连接池获取连接的超时时间",
-                  "title": "Pool Timeout"
-                },
-                "pool_use_lifo": {
-                  "type": "boolean",
-                  "description": "是否使用 LIFO 策略获取连接",
-                  "title": "Pool Use Lifo"
-                },
-                "plugins": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "description": "要加载的插件列表",
-                  "title": "Plugins"
-                },
-                "query_cache_size": {
-                  "type": "integer",
-                  "description": "查询缓存大小",
-                  "title": "Query Cache Size"
-                },
-                "use_insertmanyvalues": {
-                  "type": "boolean",
-                  "description": "启用 insertmanyvalues 执行风格，默认为 True",
-                  "title": "Use Insertmanyvalues"
-                },
-                "skip_autocommit_rollback": {
-                  "type": "boolean",
-                  "description": "如果为 True，则在自动提交模式下跳过回滚操作",
-                  "title": "Skip Autocommit Rollback"
-                },
-                "kwargs": {
-                  "type": "object",
-                  "additionalProperties": {},
-                  "description": "其他额外参数",
-                  "title": "Kwargs"
-                }
-              },
-              "required": [],
-              "additionalProperties": false
-            },
-            "UrlInfo": {
-              "type": "object",
-              "title": "UrlInfo",
-              "properties": {
-                "type": {
-                  "type": "string",
-                  "default": "sqlite",
-                  "description": "数据库类型，默认为 sqlite",
-                  "title": "Type"
-                },
-                "name": {
-                  "type": "string",
-                  "default": "data.db",
-                  "description": "数据库名称/文件路径",
-                  "title": "Name"
-                },
-                "driver": {
-                  "type": "string",
-                  "default": "aiosqlite",
-                  "description": "数据库驱动，默认为 aiosqlite；其他类型的数据库驱动参考 SQLAlchemy 文档",
-                  "title": "Driver"
-                },
-                "host": {
-                  "type": "string",
-                  "description": "数据库主机地址。如果是 SQLite 数据库，此项可不填。",
-                  "title": "Host"
-                },
-                "port": {
-                  "type": "integer",
-                  "description": "数据库端口号。如果是 SQLite 数据库，此项可不填。",
-                  "title": "Port"
-                },
-                "username": {
-                  "type": "string",
-                  "description": "数据库用户名。如果是 SQLite 数据库，此项可不填。",
-                  "title": "Username"
-                },
-                "password": {
-                  "type": "string",
-                  "description": "数据库密码。如果是 SQLite 数据库，此项可不填。",
-                  "title": "Password"
-                },
-                "query": {
-                  "type": "object",
-                  "additionalProperties": {
-                    "oneOf": [
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      {
-                        "type": "string"
-                      }
-                    ]
-                  },
-                  "description": "数据库连接参数，默认为空字典。可以传入如 `{\"timeout\": \"30\"}` 的参数。",
-                  "title": "Query"
-                }
-              },
-              "additionalProperties": false
-            }
-          }
-        },
-        "entari_plugin_user": {
-          "type": "object",
-          "title": "Config",
-          "properties": {
-            "user_token_prefix": {
-              "type": "string",
-              "default": "entari/",
-              "description": "生成令牌的前缀",
-              "title": "User Token Prefix"
-            },
-            "$disable": {
-              "type": "string",
-              "description": "Expression for whether disable this plugin"
-            },
-            "$priority": {
-              "type": "integer",
-              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
-            },
-            "$filter": {
-              "type": "string",
-              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
-            }
-          },
-          "additionalProperties": false,
-          "description": "管理和绑定不同平台的用户"
-        },
-        ".record_message": {
-          "type": "object",
-          "title": "RecordConfig",
-          "properties": {
-            "to_me_only": {
-              "type": "boolean",
-              "default": false,
-              "description": "是否仅记录提及 Bot 自己的消息",
-              "title": "To Me Only"
-            },
-            "record_send": {
-              "type": "boolean",
-              "default": false,
-              "description": "是否记录发送的消息",
-              "title": "Record Send"
-            },
-            "$disable": {
-              "type": "string",
-              "description": "Expression for whether disable this plugin"
-            },
-            "$priority": {
-              "type": "integer",
-              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
-            },
-            "$filter": {
-              "type": "string",
-              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
-            }
-          },
-          "additionalProperties": false,
-          "description": "将收到[和发出]的消息打印在日志中"
-        },
-        "::echo": {
-          "type": "object",
-          "description": "Echo the content; no configuration required",
-          "additionalProperties": true,
-          "properties": {
-            "$disable": {
-              "type": "string",
-              "description": "Expression for whether disable this plugin"
-            },
-            "$priority": {
-              "type": "integer",
-              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
-            },
-            "$filter": {
-              "type": "string",
-              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
-            }
-          }
-        },
-        "::inspect": {
-          "type": "object",
-          "description": "Inspect on any user, group or channel; no configuration required",
-          "additionalProperties": true,
-          "properties": {
-            "$disable": {
-              "type": "string",
-              "description": "Expression for whether disable this plugin"
-            },
-            "$priority": {
-              "type": "integer",
-              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
-            },
-            "$filter": {
-              "type": "string",
-              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
-            }
-          }
-        },
-        "::pipe": {
-          "type": "object",
-          "description": "一个允许用户通过管道符连接多个命令的插件。; no configuration required",
-          "additionalProperties": true,
-          "properties": {
-            "$disable": {
-              "type": "string",
-              "description": "Expression for whether disable this plugin"
-            },
-            "$priority": {
-              "type": "integer",
-              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
-            },
-            "$filter": {
-              "type": "string",
-              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
-            }
-          }
-        },
-        "::control": {
-          "type": "object",
-          "description": "提供装饰器和工具函数以便于用户控制插件的可用性，比如在负载均衡，特定群下禁用插件等; no configuration required",
-          "additionalProperties": true,
-          "properties": {
-            "$disable": {
-              "type": "string",
-              "description": "Expression for whether disable this plugin"
-            },
-            "$priority": {
-              "type": "integer",
-              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
-            },
-            "$filter": {
-              "type": "string",
-              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
-            }
-          }
-        },
         "entari_plugin_server": {
           "type": "object",
           "title": "Config",
@@ -2050,6 +1610,443 @@
             }
           }
         },
+        "entari_plugin_database": {
+          "type": "object",
+          "title": "Config",
+          "properties": {
+            "type": {
+              "type": "string",
+              "default": "sqlite",
+              "description": "数据库类型，默认为 sqlite",
+              "title": "Type"
+            },
+            "name": {
+              "type": "string",
+              "default": "data.db",
+              "description": "数据库名称/文件路径",
+              "title": "Name"
+            },
+            "driver": {
+              "type": "string",
+              "default": "aiosqlite",
+              "description": "数据库驱动，默认为 aiosqlite；其他类型的数据库驱动参考 SQLAlchemy 文档",
+              "title": "Driver"
+            },
+            "host": {
+              "type": "string",
+              "description": "数据库主机地址。如果是 SQLite 数据库，此项可不填。",
+              "title": "Host"
+            },
+            "port": {
+              "type": "integer",
+              "description": "数据库端口号。如果是 SQLite 数据库，此项可不填。",
+              "title": "Port"
+            },
+            "username": {
+              "type": "string",
+              "description": "数据库用户名。如果是 SQLite 数据库，此项可不填。",
+              "title": "Username"
+            },
+            "password": {
+              "type": "string",
+              "description": "数据库密码。如果是 SQLite 数据库，此项可不填。",
+              "title": "Password"
+            },
+            "query": {
+              "type": "object",
+              "additionalProperties": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
+              },
+              "description": "数据库连接参数，默认为空字典。可以传入如 `{\"timeout\": \"30\"}` 的参数。",
+              "title": "Query"
+            },
+            "options": {
+              "$ref": "#/properties/plugins/properties/entari_plugin_database/$defs/EngineOptions",
+              "description": "数据库连接选项，默认为 `{\"echo\": None, \"pool_pre_ping\": True}`",
+              "title": "Options"
+            },
+            "session_options": {
+              "type": "object",
+              "additionalProperties": {},
+              "description": "数据库会话选项，默认为 None。可以传入如 `{\"expire_on_commit\": False}` 的字典。",
+              "title": "Session Options"
+            },
+            "binds": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/properties/plugins/properties/entari_plugin_database/$defs/UrlInfo"
+              },
+              "description": "数据库绑定配置，默认为 None。可以传入如 `{\"bind1\": UrlInfo(...), \"bind2\": UrlInfo(...)}` 的字典。",
+              "title": "Binds"
+            },
+            "create_table_at": {
+              "enum": [
+                "preparing",
+                "prepared",
+                "blocking"
+              ],
+              "default": "preparing",
+              "description": "在指定阶段创建数据库表，默认为 'preparing'。可选值为 'preparing', 'prepared', 'blocking'。",
+              "title": "Create Table At"
+            },
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          },
+          "additionalProperties": false,
+          "description": "基于 SQLAlchemy 的数据库服务插件",
+          "$defs": {
+            "ResetStyle": {
+              "title": "Resetstyle",
+              "enum": [
+                0,
+                1,
+                2
+              ]
+            },
+            "EngineOptions": {
+              "type": "object",
+              "title": "EngineOptions",
+              "properties": {
+                "connect_args": {
+                  "type": "object",
+                  "additionalProperties": {},
+                  "description": "传递给数据库驱动的连接参数字典",
+                  "title": "Connect Args"
+                },
+                "echo": {
+                  "oneOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "const": "debug"
+                    }
+                  ],
+                  "description": "如果为 True，启用 SQL 语句日志记录；如果为 \"debug\"，则记录更详细的调试信息",
+                  "title": "Echo"
+                },
+                "echo_pool": {
+                  "oneOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "const": "debug"
+                    }
+                  ],
+                  "description": "如果为 True，启用连接池日志记录；如果为 \"debug\"，则记录更详细的调试信息",
+                  "title": "Echo Pool"
+                },
+                "enable_from_linting": {
+                  "type": "boolean",
+                  "description": "启用 FROM 子句检查，默认为 True",
+                  "title": "Enable From Linting"
+                },
+                "execution_options": {
+                  "type": "object",
+                  "additionalProperties": {},
+                  "description": "执行选项字典",
+                  "title": "Execution Options"
+                },
+                "future": {
+                  "const": true,
+                  "description": "使用 2.0 风格的 Engine 和 Connection API",
+                  "title": "Future"
+                },
+                "hide_parameters": {
+                  "type": "boolean",
+                  "description": "如果为 True，日志中不显示 SQL 参数",
+                  "title": "Hide Parameters"
+                },
+                "implicit_returning": {
+                  "const": true,
+                  "description": "启用隐式返回，默认为 True",
+                  "title": "Implicit Returning"
+                },
+                "insertmanyvalues_page_size": {
+                  "type": "integer",
+                  "description": "每页插入的行数，默认为 1000",
+                  "title": "Insertmanyvalues Page Size"
+                },
+                "isolation_level": {
+                  "enum": [
+                    "SERIALIZABLE",
+                    "REPEATABLE READ",
+                    "READ COMMITTED",
+                    "READ UNCOMMITTED",
+                    "AUTOCOMMIT"
+                  ],
+                  "description": "设置连接的隔离级别",
+                  "title": "Isolation Level"
+                },
+                "label_length": {
+                  "oneOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "限制动态生成的列标签的长度",
+                  "title": "Label Length"
+                },
+                "logging_name": {
+                  "type": "string",
+                  "description": "日志记录名称",
+                  "title": "Logging Name"
+                },
+                "max_identifier_length": {
+                  "oneOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "最大标识符长度",
+                  "title": "Max Identifier Length"
+                },
+                "max_overflow": {
+                  "type": "integer",
+                  "description": "连接池的最大溢出连接数",
+                  "title": "Max Overflow"
+                },
+                "module": {
+                  "oneOf": [
+                    {},
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "数据库驱动模块",
+                  "title": "Module"
+                },
+                "paramstyle": {
+                  "oneOf": [
+                    {
+                      "enum": [
+                        "qmark",
+                        "numeric",
+                        "named",
+                        "format",
+                        "pyformat",
+                        "numeric_dollar"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "参数样式",
+                  "title": "Paramstyle"
+                },
+                "pool_logging_name": {
+                  "type": "string",
+                  "description": "连接池日志记录名称",
+                  "title": "Pool Logging Name"
+                },
+                "pool_pre_ping": {
+                  "type": "boolean",
+                  "description": "启用连接池预检测，默认为 True",
+                  "title": "Pool Pre Ping"
+                },
+                "pool_size": {
+                  "type": "integer",
+                  "description": "连接池大小",
+                  "title": "Pool Size"
+                },
+                "pool_recycle": {
+                  "type": "integer",
+                  "description": "连接池连接的最大重用时间",
+                  "title": "Pool Recycle"
+                },
+                "pool_reset_on_return": {
+                  "oneOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "$ref": "#/properties/plugins/properties/entari_plugin_database/$defs/ResetStyle"
+                        },
+                        {
+                          "enum": [
+                            "commit",
+                            "rollback"
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "连接池连接返回时的重置策略",
+                  "title": "Pool Reset On Return"
+                },
+                "pool_timeout": {
+                  "type": "number",
+                  "description": "连接池获取连接的超时时间",
+                  "title": "Pool Timeout"
+                },
+                "pool_use_lifo": {
+                  "type": "boolean",
+                  "description": "是否使用 LIFO 策略获取连接",
+                  "title": "Pool Use Lifo"
+                },
+                "plugins": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "要加载的插件列表",
+                  "title": "Plugins"
+                },
+                "query_cache_size": {
+                  "type": "integer",
+                  "description": "查询缓存大小",
+                  "title": "Query Cache Size"
+                },
+                "use_insertmanyvalues": {
+                  "type": "boolean",
+                  "description": "启用 insertmanyvalues 执行风格，默认为 True",
+                  "title": "Use Insertmanyvalues"
+                },
+                "skip_autocommit_rollback": {
+                  "type": "boolean",
+                  "description": "如果为 True，则在自动提交模式下跳过回滚操作",
+                  "title": "Skip Autocommit Rollback"
+                },
+                "kwargs": {
+                  "type": "object",
+                  "additionalProperties": {},
+                  "description": "其他额外参数",
+                  "title": "Kwargs"
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            },
+            "UrlInfo": {
+              "type": "object",
+              "title": "UrlInfo",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "default": "sqlite",
+                  "description": "数据库类型，默认为 sqlite",
+                  "title": "Type"
+                },
+                "name": {
+                  "type": "string",
+                  "default": "data.db",
+                  "description": "数据库名称/文件路径",
+                  "title": "Name"
+                },
+                "driver": {
+                  "type": "string",
+                  "default": "aiosqlite",
+                  "description": "数据库驱动，默认为 aiosqlite；其他类型的数据库驱动参考 SQLAlchemy 文档",
+                  "title": "Driver"
+                },
+                "host": {
+                  "type": "string",
+                  "description": "数据库主机地址。如果是 SQLite 数据库，此项可不填。",
+                  "title": "Host"
+                },
+                "port": {
+                  "type": "integer",
+                  "description": "数据库端口号。如果是 SQLite 数据库，此项可不填。",
+                  "title": "Port"
+                },
+                "username": {
+                  "type": "string",
+                  "description": "数据库用户名。如果是 SQLite 数据库，此项可不填。",
+                  "title": "Username"
+                },
+                "password": {
+                  "type": "string",
+                  "description": "数据库密码。如果是 SQLite 数据库，此项可不填。",
+                  "title": "Password"
+                },
+                "query": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "oneOf": [
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  "description": "数据库连接参数，默认为空字典。可以传入如 `{\"timeout\": \"30\"}` 的参数。",
+                  "title": "Query"
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "entari_plugin_user": {
+          "type": "object",
+          "title": "Config",
+          "properties": {
+            "user_token_prefix": {
+              "type": "string",
+              "default": "entari/",
+              "description": "生成令牌的前缀",
+              "title": "User Token Prefix"
+            },
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          },
+          "additionalProperties": false,
+          "description": "管理和绑定不同平台的用户"
+        },
         "entari_plugin_arkgacha": {
           "type": "object",
           "title": "Config",
@@ -2230,6 +2227,92 @@
             }
           }
         },
+        "core": {
+          "type": "object",
+          "title": "CoreConfig",
+          "properties": {
+            "tencentcloud": {
+              "$ref": "#/properties/plugins/properties/core/$defs/TencentCloudConfig",
+              "description": "腾讯云API 配置",
+              "title": "Tencentcloud"
+            },
+            "cos_convert": {
+              "type": "boolean",
+              "default": true,
+              "description": "是否启用COS转换功能, 开启后会将发送的 bytes 图片上传到COS并转换为URL发送,\n以解决部分平台不支持直接发送bytes图片的问题",
+              "title": "Cos Convert"
+            },
+            "long_message_forward": {
+              "type": "boolean",
+              "default": false,
+              "description": "是否启用长消息转发功能, 开启后会将发送的长文本消息拆分为多条消息发送, 以解决部分平台不支持发送长文本的问题",
+              "title": "Long Message Forward"
+            },
+            "qq_markdown": {
+              "type": "boolean",
+              "default": true,
+              "description": "是否启用QQ Markdown功能, 开启后会将发送的消息转换为 QQ Markdown 格式发送",
+              "title": "Qq Markdown"
+            },
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          },
+          "required": [
+            "tencentcloud"
+          ],
+          "additionalProperties": false,
+          "description": "机器人核心功能, 包括腾讯云API的相关功能",
+          "$defs": {
+            "TencentCloudConfig": {
+              "type": "object",
+              "title": "TencentCloudConfig",
+              "properties": {
+                "region": {
+                  "type": "string",
+                  "description": "腾讯云API 的 region",
+                  "title": "Region"
+                },
+                "secret_id": {
+                  "type": "string",
+                  "description": "腾讯云API 的 secret-id",
+                  "title": "Secret Id"
+                },
+                "secret_key": {
+                  "type": "string",
+                  "description": "腾讯云API 的 secret-key",
+                  "title": "Secret Key"
+                },
+                "bucket": {
+                  "type": "string",
+                  "description": "腾讯云API 下 COS 的 bucket",
+                  "title": "Bucket"
+                },
+                "custom_domain": {
+                  "type": "string",
+                  "description": "腾讯云API 下 COS 的自定义域名",
+                  "title": "Custom Domain"
+                }
+              },
+              "required": [
+                "region",
+                "secret_id",
+                "secret_key",
+                "bucket"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
         "coc": {
           "type": "object",
           "description": "骰娘功能; no configuration required",
@@ -2270,19 +2353,9 @@
         },
         "dialog": {
           "type": "object",
-          "title": "DialogConfig",
+          "description": "通用模板对话; no configuration required",
+          "additionalProperties": true,
           "properties": {
-            "nickname": {
-              "type": "string",
-              "description": "触发对话的昵称, 例如 \"小爱同学\" ",
-              "title": "Nickname"
-            },
-            "random": {
-              "type": "boolean",
-              "default": false,
-              "description": "是否随机选择回复, False 则一定会回复消息",
-              "title": "Random"
-            },
             "$disable": {
               "type": "string",
               "description": "Expression for whether disable this plugin"
@@ -2295,12 +2368,7 @@
               "type": "string",
               "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
             }
-          },
-          "required": [
-            "nickname"
-          ],
-          "additionalProperties": false,
-          "description": "对话插件配置"
+          }
         },
         "draw": {
           "type": "object",
@@ -2792,43 +2860,6 @@
               "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
             }
           }
-        },
-        ".localdata": {
-          "type": "object",
-          "title": "Config",
-          "properties": {
-            "use_global": {
-              "type": "boolean",
-              "default": false,
-              "description": "是否使用全局数据目录",
-              "title": "Use Global"
-            },
-            "app_name": {
-              "type": "string",
-              "default": "entari",
-              "description": "应用名称",
-              "title": "App Name"
-            },
-            "base_dir": {
-              "type": "string",
-              "description": "基础目录，默认为空，表示使用 `app_name` 作为目录名，",
-              "title": "Base Dir"
-            },
-            "$disable": {
-              "type": "string",
-              "description": "Expression for whether disable this plugin"
-            },
-            "$priority": {
-              "type": "integer",
-              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
-            },
-            "$filter": {
-              "type": "string",
-              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
-            }
-          },
-          "additionalProperties": false,
-          "description": "Data store interface with local directories"
         }
       }
     },

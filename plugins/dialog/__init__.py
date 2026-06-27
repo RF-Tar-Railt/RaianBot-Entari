@@ -57,7 +57,7 @@ async def dialog(sess: Session[MessageCreatedEvent], app: Entari):
         return BLOCK
 
 
-@listen(MessageCreatedEvent, priority=18, label="AI 对话")
+@listen(MessageCreatedEvent, priority=19, label="AI 对话")
 @inject("entari_plugin_llm")
 async def llm_dialog(sess: Session, ctx: Contexts, app: Entari, is_reply_me: bool = False):
     """利用 LLM 进行对话"""
