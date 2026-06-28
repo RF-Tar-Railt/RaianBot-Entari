@@ -10,11 +10,11 @@ from arclet.entari import (
     MessageChain,
     Session,
     metadata,
-    plugin_config,
     listen,
     plugin,
     inject,
-    SendResponse, Entari,
+    SendResponse,
+    Entari,
 )
 from arclet.letoderea import Contexts, BLOCK
 
