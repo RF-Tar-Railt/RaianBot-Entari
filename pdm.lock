@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:52c5c0ef5e675fb94bd9abe39159077f6323cb020c1b9f7e68d715db6149cb83"
+content_hash = "sha256:0a411c2d0eaba4ea9b9a09c64a7818b3f8d88b05f00aa8a8e24b81625512bd07"
 
 [[metadata.targets]]
 requires_python = ">=3.10"
@@ -3516,7 +3516,7 @@ files = [
 
 [[package]]
 name = "satori-python-adapter-qq"
-version = "0.4.0rc12"
+version = "0.4.0rc13"
 requires_python = "<4.0,>=3.10"
 summary = "Satori Protocol SDK for python, adapter for QQ"
 groups = ["default"]
@@ -3525,8 +3525,8 @@ dependencies = [
     "satori-python<1.4.0,>=1.3.3",
 ]
 files = [
-    {file = "satori_python_adapter_qq-0.4.0rc12-py3-none-any.whl", hash = "sha256:1c0cd643b646d0370b0ef92d5cea4aa0455de14d297ea76b2922ca5a7ca8787f"},
-    {file = "satori_python_adapter_qq-0.4.0rc12.tar.gz", hash = "sha256:34768a6e60d3f12e12d80732f5b4953e442a19df10e4c5191058172647d0c704"},
+    {file = "satori_python_adapter_qq-0.4.0rc13-py3-none-any.whl", hash = "sha256:afb67b66010e7215b8208ea27b518fda4ac5baaa1ccc2f898631c5b040c94585"},
+    {file = "satori_python_adapter_qq-0.4.0rc13.tar.gz", hash = "sha256:834bb4df9f487c35f77dd709604cf3a0a5dacbb78c68eeb233707dd3a9d953d3"},
 ]
 
 [[package]]
@@ -3550,7 +3550,7 @@ files = [
 
 [[package]]
 name = "satori-python-core"
-version = "1.3.5"
+version = "1.3.6"
 requires_python = "<4.0,>=3.10"
 summary = "Satori Protocol SDK for python, specify common part"
 groups = ["default"]
@@ -3558,8 +3558,8 @@ dependencies = [
     "typing-extensions>=4.7.0",
 ]
 files = [
-    {file = "satori_python_core-1.3.5-py3-none-any.whl", hash = "sha256:ef9d6ecfb002d9808cf7d2b9b6c391529c9a9673cd2d63aa3887f7f91e63d985"},
-    {file = "satori_python_core-1.3.5.tar.gz", hash = "sha256:898620707d72cdcb838476b42a253ffd7694349ce8e5a303a058366f02074a0d"},
+    {file = "satori_python_core-1.3.6-py3-none-any.whl", hash = "sha256:d94aec022a117216cf792db3589e5f9f65e4ea5f57fa717fe98dd26f67f84cb3"},
+    {file = "satori_python_core-1.3.6.tar.gz", hash = "sha256:58d562604e4cad04d7ef1143ce3cd5f579759b880a619d42be4f814eceb4fea0"},
 ]
 
 [[package]]

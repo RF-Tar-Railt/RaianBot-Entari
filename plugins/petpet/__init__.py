@@ -58,7 +58,7 @@ async def on_nudge(event: NudgeEvent, session: Session):
         return
 
     img = generate(data).getvalue()
-    await session.account.send_message(
+    await session.account.protocol.send_message(
         str(event.group_id),
         MessageChain(Image.of(raw=img)),
     )

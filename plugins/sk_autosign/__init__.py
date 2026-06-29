@@ -198,7 +198,7 @@ async def shed(app: Entari):
             try:
                 await asyncio.sleep(1)
                 channel = await account.user_channel_create(user_bind.platform_id)
-                await account.send_message(channel, "\n".join(ans))
+                await account.protocol.send_message(channel, "\n".join(ans))
                 break
             except Exception:
                 continue

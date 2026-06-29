@@ -20,11 +20,11 @@ basic:
 
 adapters:
 ## 接入 onebot11 就把下面的注释去掉，接入 milky 就把下面的注释去掉
-#  - $path: '@onebot11.reverse'
-#    endpoint: ws
-  - $path: '@milky.main'
-    endpoint: ${{ env.MILKY_ENDPOINT }}
-    token: ${{ env.MILKY_TOKEN }}
+  - $path: '@onebot11.reverse'
+    endpoint: ws
+#  - $path: '@milky.main'
+#    endpoint: ${{ env.MILKY_ENDPOINT }}
+#    token: ${{ env.MILKY_TOKEN }}
   - $path: '@qq.websocket'
     app_id: ${{ env.QQ_APP_ID }}
     secret: ${{ env.QQ_SECRET }}
@@ -35,6 +35,14 @@ adapters:
       at_messages: false
       c2c_group_at_messages: true
     is_sandbox: false
+## 如果要使用 webhook 方式接入 QQ，就先把上面的 qq.websocket 注释掉，然后把下面的注释去掉
+#  - $path: '@qq.main'
+#    secrets:
+#      ${{ env.QQ_APP_ID }}: ${{ env.QQ_SECRET }}
+#    path: "/qqbot"
+#    certfile: ${{ env.QQ_CERTFILE }}
+#    keyfile: ${{ env.QQ_KEYFILE }}
+#    is_sandbox: false
 
 plugins:
 

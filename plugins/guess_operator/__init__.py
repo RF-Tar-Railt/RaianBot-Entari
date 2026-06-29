@@ -8,6 +8,8 @@ from arclet.letoderea import step_out
 from arknights_toolkit.wordle import Guess, OperatorWordle
 
 from satori import Text, ChannelType
+from satori.element import Custom
+
 # from satori.element import Custom
 
 metadata(
@@ -53,27 +55,8 @@ async def guess_reset(session: Session):
     return await session.send("重置完毕")
 
 
-#
-# kb = [[
-#     Button(
-#         RenderData("取消游戏", "取消游戏", 1),
-#         Action(2, data="取消", enter=True),
-#     ),
-#     Button(
-#         RenderData("提示", "提示", 1),
-#         Action(2, data="提示", enter=True),
-#     )
-# ]]
-
-kb = [Button.input("取消")("取消游戏"), Button.input("提示")("提示")]
-
-# kb1 = [[
-#     Button(
-#         RenderData("再来一局！", "再来一局！", 1),
-#         Action(2, data="猜干员", enter=True),
-#     )
-# ]]
-kb1 = [Button.input("猜干员")("再来一局！")]
+kb = [Button.input("取消", "primary")("取消游戏"), Button.input("提示", "primary")("提示")]
+kb1 = [Button.input("猜干员", "primary")("再来一局！")]
 
 
 @guess_cmd.assign("$main")
@@ -92,53 +75,38 @@ async def guess(
 
     selected_name, selected = wordle.select(token)
     if session.account.platform == "qq":
-        ...
-    #         if is_qqapi_group(ctx):
-    #             rule_img = Path("assets/image/guess.png").read_bytes()
-    #             url = await bot.upload_to_cos(rule_img, f"guess_rule_{token_hex(16)}.png", custom_domain=True)
-    #             init_names = random.sample(list(wordle.tables.keys()), 3)
-    #             _kb = kb.copy()
-    #             _kb.append(
-    #                 [
-    #                     Button(
-    #                         RenderData(init_names[0], init_names[0], 1),
-    #                         Action(2, data=init_names[0], enter=True),
-    #                     ),
-    #                     Button(
-    #                         RenderData(init_names[1], init_names[1], 1),
-    #                         Action(2, data=init_names[1], enter=True),
-    #                     ),
-    #                     Button(
-    #                         RenderData(init_names[2], init_names[2], 1),
-    #                         Action(2, data=init_names[2], enter=True),
-    #                     ),
-    #                 ]
-    #             )
-    #             await ctx.scene.send_message(
-    #                 [
-    #                     Markdown(
-    #                         content=f"""\
-    # ## 猜干员游戏开始！
-    #
-    # 请尽量用回复bot的形式发送干员名字
-    #
-    # 发送 `提示` 或 `@bot 提示` 可以获取提示
-    #
-    # 发送 `取消` 或 `@bot 取消` 可以结束当前游戏
-    #
-    # ![#420px #267px]({url})
-    # """
-    #                     ),
-    #                     Keyboard(content=_kb)
-    #                 ]
-    #             )
-    #         else:
-    await session.send(
-        "猜干员游戏开始！\n"
-        "请尽量用回复bot的形式发送干员名字\n"
-        "发送 提示 或 @bot 提示 可以获取提示\n"
-        "发送 取消 或 @bot 取消 可以结束当前游戏",
-    )
+        img = (root / "assets" / "help.png").read_bytes()
+        init_names = random.sample(list(wordle.tables.keys()), 3)
+        kb2 = [
+            Button.input(init_names[0])(init_names[0]),
+            Button.input(init_names[1])(init_names[1]),
+            Button.input(init_names[2])(init_names[2]),
+        ]
+        await session.send(
+            [
+                Custom("markdown")(
+                    """\
+## 猜干员游戏开始！
+
+请尽量用回复bot的形式发送干员名字
+
+发送 `提示` 或 `@bot 提示` 可以获取提示
+
+发送 `取消` 或 `@bot 取消` 可以结束当前游戏
+                  """
+                ),
+                Image.of(raw=img, mime="image/png", width=420, height=267),
+                Custom("button-group", children=kb2),
+                Custom("button-group", children=kb),
+            ]
+        )
+    else:
+        await session.send(
+            "猜干员游戏开始！\n"
+            "请尽量用回复bot的形式发送干员名字\n"
+            "发送 提示 或 @bot 提示 可以获取提示\n"
+            "发送 取消 或 @bot 取消 可以结束当前游戏",
+        )
 
     async def waiter(sess1: Session) -> tuple[bool | Guess, Session] | None:
         name = str(sess1.elements[Text]).strip()
@@ -181,28 +149,14 @@ async def guess(
             continue
         try:
             if simple.result:
-                await session.send(wordle.draw(res, simple=True, max_guess=max_guess.result))
+                msg = Text(wordle.draw(res, simple=True, max_guess=max_guess.result))
             else:
                 img = wordle.draw(res, max_guess=max_guess.result)
-                await session.send([Image.of(raw=img, mime="image/jpeg")])
-                # url = None
-                # try:
-                #     url = await app.upload_to_cos(img, f"guess_{token_hex(16)}.jpg", custom_domain=True)
-                #     await session.send(
-                #         [
-                #             Text(f"{len(res.lines)}/{max_guess.result}\n"),
-                #             Custom(
-                #                 type="image",
-                #                 data={"file": url},
-                #             ),
-                #         ] + kb if res.state == "guessing" else kb1
-                #     )
-                # except Exception:
-                #     url = url or await app.upload_to_cos(img, f"guess_{token_hex(16)}.jpg")
-                #     try:
-                #         await session.send(Image.of(url=url))
-                #     except Exception:
-                #         await session.send(wordle.draw(res, simple=True, max_guess=max_guess.result))
+                msg = Image.of(raw=img, mime="image/jpeg", width=600, height=80 * (len(res.lines) + 2))
+            if session.account.platform == "qq":
+                await session.send([Custom("button-group", children=kb if res.state == "guessing" else kb1), msg])
+            else:
+                await session.send([msg])
         except Exception as e:
             await session.send(f"{e}")
             break
