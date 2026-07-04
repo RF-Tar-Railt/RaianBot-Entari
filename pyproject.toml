@@ -19,6 +19,7 @@ dependencies = [
     "diro-py>=0.1.1",
     "entari-plugin-llm>=0.2.0",
     "PyJWT>=2.13.0",
+    "entari-plugin-webui>=1.0.1",
 ]
 authors = [
     {"name" = "RF-Tar-Railt", "email" = "rf_tar_railt@qq.com"}

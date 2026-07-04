@@ -109,6 +109,8 @@ plugins:
     .handlers.chat:
       $disable: true
 
+  webui: {}
+
   core:
     tencentcloud:
       region: ap-guangzhou

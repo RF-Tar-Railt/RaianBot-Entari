@@ -4,10 +4,27 @@ from entari_plugin_browser import md2img
 from satori.element import Custom, Image
 
 from arclet.alconna import Alconna, Args, CommandMeta, Field, command_manager
-from arclet.entari import Entari, MessageChain, command, plugin, Session
+from arclet.entari import Entari, MessageChain, command, plugin, Session, metadata
 from arclet.entari.event.command import CommandOutput
 
 from tarina import lang
+
+
+metadata(
+    "帮助",
+    author=[{"name": "RF-Tar-Railt", "email": "rf_tar_railt@qq.com"}],
+    description="展示所有命令的帮助(菜单)",
+    readme="""
+# 帮助指令
+
+该插件提供查看所有命令帮助的功能等。
+
+## 使用
+
+- 查看所有命令帮助: `帮助` 或 `菜单`
+- 查看指定命令帮助: `帮助 [id|name]` 或 `菜单 [id|name]`
+""",
+)
 
 
 cmd_help = Alconna(

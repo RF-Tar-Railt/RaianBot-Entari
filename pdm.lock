@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:0a411c2d0eaba4ea9b9a09c64a7818b3f8d88b05f00aa8a8e24b81625512bd07"
+content_hash = "sha256:e98add7b8df9eeaad0f61a25cff725e76d58390d933093d6f031b2f5ff80c4c0"
 
 [[metadata.targets]]
 requires_python = ">=3.10"
@@ -195,6 +195,21 @@ files = [
 ]
 
 [[package]]
+name = "ansi2html"
+version = "1.9.2"
+requires_python = ">=3.7"
+summary = "Convert text with ANSI color codes to HTML or to LaTeX"
+groups = ["default"]
+dependencies = [
+    "importlib-metadata; python_version < \"3.8\"",
+    "typing-extensions; python_version < \"3.8\"",
+]
+files = [
+    {file = "ansi2html-1.9.2-py3-none-any.whl", hash = "sha256:dccb75aa95fb018e5d299be2b45f802952377abfdce0504c17a6ee6ef0a420c5"},
+    {file = "ansi2html-1.9.2.tar.gz", hash = "sha256:3453bf87535d37b827b05245faaa756dbab4ec3d69925e352b6319c3c955c0a5"},
+]
+
+[[package]]
 name = "anyio"
 version = "4.13.0"
 requires_python = ">=3.10"
@@ -274,6 +289,23 @@ dependencies = [
     "python-dotenv>=1.0.1",
     "ruamel-yaml>=0.18.10",
     "watchfiles>=1.0.3",
+]
+files = [
+    {file = "arclet_entari-0.18.0-py3-none-any.whl", hash = "sha256:30255962b3a44efd851552be8224af1cbba1dff6bd125509f5a060285fb790c5"},
+    {file = "arclet_entari-0.18.0.tar.gz", hash = "sha256:a036804f816fd19eb02bb9ddb0a33c2f392be730b281f55f646277dd92125408"},
+]
+
+[[package]]
+name = "arclet-entari"
+version = "0.18.0"
+extras = ["dotenv", "yaml"]
+requires_python = ">=3.10"
+summary = "Simple IM Framework based on satori-python"
+groups = ["default"]
+dependencies = [
+    "arclet-entari==0.18.0",
+    "python-dotenv>=1.0.1",
+    "ruamel-yaml>=0.18.10",
 ]
 files = [
     {file = "arclet_entari-0.18.0-py3-none-any.whl", hash = "sha256:30255962b3a44efd851552be8224af1cbba1dff6bd125509f5a060285fb790c5"},
@@ -911,6 +943,24 @@ files = [
 ]
 
 [[package]]
+name = "entari-plugin-webui"
+version = "1.0.1"
+requires_python = ">=3.10"
+summary = "WebUI Plugin for Entari"
+groups = ["default"]
+dependencies = [
+    "ansi2html>=1.9.2",
+    "arclet-entari[dotenv,yaml]>=0.18.0",
+    "entari-plugin-database>=0.3.2",
+    "entari-plugin-server>=0.7.1",
+    "fastapi>=0.135.1",
+]
+files = [
+    {file = "entari_plugin_webui-1.0.1-py3-none-any.whl", hash = "sha256:0510ba46869d5a2b7a00bd390cc33b760a62c1cacc5cb39b92bf112218bf0b70"},
+    {file = "entari_plugin_webui-1.0.1.tar.gz", hash = "sha256:60cd335933abd99384c844372f2ed299c28900241b8372d5629654ed2d0cc1dc"},
+]
+
+[[package]]
 name = "exceptiongroup"
 version = "1.3.1"
 requires_python = ">=3.7"
@@ -937,6 +987,24 @@ dependencies = [
 files = [
     {file = "expiringdictx-1.1.0-py3-none-any.whl", hash = "sha256:f5d38ae23b46a8f97da27ce0dd74e669430d43b2efe98232a4a81f10b43cde25"},
     {file = "expiringdictx-1.1.0.tar.gz", hash = "sha256:f590a4bd656a5317c51e696c2f48fee97e1d3feb6de87e00cebeaad9035824fa"},
+]
+
+[[package]]
+name = "fastapi"
+version = "0.139.0"
+requires_python = ">=3.10"
+summary = "FastAPI framework, high performance, easy to learn, fast to code, ready for production"
+groups = ["default"]
+dependencies = [
+    "annotated-doc>=0.0.2",
+    "pydantic>=2.9.0",
+    "starlette>=0.46.0",
+    "typing-extensions>=4.8.0",
+    "typing-inspection>=0.4.2",
+]
+files = [
+    {file = "fastapi-0.139.0-py3-none-any.whl", hash = "sha256:cf15e1e9e667ddb0ad63811e60bd11390d1aac838ca4a7a23f421807b2308189"},
+    {file = "fastapi-0.139.0.tar.gz", hash = "sha256:99ab7b2d92223c76d6cf10757ab3f89d45b38267fc20b2a136cf02f6beac3145"},
 ]
 
 [[package]]

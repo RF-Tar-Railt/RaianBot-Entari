@@ -17,6 +17,7 @@ base_api = URL(cfg.api)
 metadata(
     name="点歌",
     author=[{"name": "RF-Tar-Railt", "email": "rf_tar_railt@qq.com"}],
+    config=MusicConfig,
 )
 
 

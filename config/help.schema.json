@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
-  "description": "No configuration required",
+  "description": "展示所有命令的帮助(菜单); no configuration required",
   "additionalProperties": true,
   "properties": {
     "$disable": {

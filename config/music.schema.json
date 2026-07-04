@@ -1,9 +1,18 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
-  "description": "点歌; no configuration required",
-  "additionalProperties": true,
+  "title": "MusicConfig",
   "properties": {
+    "api": {
+      "type": "string",
+      "description": "网易云API 接口",
+      "title": "Api"
+    },
+    "music_share_sign": {
+      "type": "string",
+      "description": "音乐分享签名",
+      "title": "Music Share Sign"
+    },
     "$disable": {
       "type": "string",
       "description": "Expression for whether disable this plugin"
@@ -20,5 +29,11 @@
       "type": "boolean",
       "description": "Whether this plugin is optional"
     }
-  }
+  },
+  "required": [
+    "api",
+    "music_share_sign"
+  ],
+  "additionalProperties": false,
+  "description": "点歌"
 }
