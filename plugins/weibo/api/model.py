@@ -1,9 +1,10 @@
+from dataclasses import asdict, dataclass, field
 from typing import Literal
-from dataclasses import dataclass, field, asdict
-from satori.model import ModelBase
-from sqlalchemy.types import Integer, BigInteger, String, Boolean
-from sqlalchemy.orm import Mapped, mapped_column
+
 from entari_plugin_database import BaseOrm
+from satori.model import ModelBase
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.types import BigInteger, Boolean, Integer, String
 
 MAPPING = {
     "info": 100505,

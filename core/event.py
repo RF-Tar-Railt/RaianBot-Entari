@@ -1,4 +1,4 @@
-from arclet.entari import BaseEvent, register_internal_event, attr
+from arclet.entari import BaseEvent, attr, register_internal_event
 
 
 class NudgeEvent(BaseEvent):

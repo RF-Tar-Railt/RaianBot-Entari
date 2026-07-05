@@ -1,6 +1,6 @@
 from arclet.entari import Entari, listen
-from arclet.entari.event.base import LoginUpdatedEvent
 from arclet.entari.config import EntariConfig
+from arclet.entari.event.base import LoginUpdatedEvent
 from satori import Login, MessageObject, Text
 
 

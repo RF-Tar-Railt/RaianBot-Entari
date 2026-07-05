@@ -3,12 +3,10 @@ from datetime import datetime
 
 from arclet.entari import Image, MessageChain, command, keeping, metadata, plugin
 from arclet.entari.event.lifespan import AccountUpdate
+from entari_plugin_browser import text2img
 from jinja2 import Environment
 from jinja2.meta import find_undeclared_variables
 from satori import LoginStatus
-
-from entari_plugin_browser import text2img
-
 
 from .config import StatusConfig
 from .data import (
@@ -25,7 +23,6 @@ from .data import (
     per_cpu_status,
 )
 from .helpers import humanize_date, humanize_delta, relative_time
-
 
 metadata(name="状态", author=[{"name": "RF-Tar-Railt", "email": "rf_tar_railt@qq.com"}], config=StatusConfig)
 

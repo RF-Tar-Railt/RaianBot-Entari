@@ -1,12 +1,10 @@
 import asyncio
 
-from arclet.entari import Session, command, plugin_config, metadata, MessageChain, Entari
-
+from arclet.entari import Entari, MessageChain, Session, command, metadata, plugin_config
 from satori.element import Custom
 from yarl import URL
 
 from .config import MusicConfig
-
 
 JUMP_URL = "https://music.163.com/song?id={id}"
 MUSIC_URL = "https://music.163.com/song/media/outer/url?id={id}.mp3"

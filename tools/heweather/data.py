@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import asyncio
-from pydantic import BaseModel, model_validator
+
 from httpx import URL, AsyncClient, Response
 from loguru import logger
+from pydantic import BaseModel, model_validator
 
 from .model import (
     AirApi,

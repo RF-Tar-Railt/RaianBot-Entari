@@ -4,7 +4,7 @@ from contextlib import suppress
 import diro
 from arclet.alconna import Alconna, Args, CommandMeta, Field, Option, namespace
 from arclet.alconna.tools import MarkdownTextFormatter
-from arclet.entari import command, Session, metadata
+from arclet.entari import Session, command, metadata
 from entari_plugin_database import AsyncSession
 from nepattern import BasePattern, MatchMode
 from satori import ChannelType

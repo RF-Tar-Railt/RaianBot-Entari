@@ -1,9 +1,8 @@
 from dataclasses import dataclass
 
+from entari_plugin_database import Base
 from sqlalchemy import Integer, String, text
 from sqlalchemy.orm import Mapped, mapped_column
-
-from entari_plugin_database import Base
 
 
 @dataclass

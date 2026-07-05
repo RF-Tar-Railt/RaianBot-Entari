@@ -3,11 +3,10 @@ from contextlib import suppress
 from pathlib import Path
 
 from arclet.alconna import Alconna, Args, CommandMeta, Kw, Option
-from arclet.entari import Image, Button, Session, command, local_data, Entari, MessageCreatedEvent, metadata
+from arclet.entari import Button, Entari, Image, MessageCreatedEvent, Session, command, local_data, metadata
 from arclet.letoderea import step_out
 from arknights_toolkit.wordle import Guess, OperatorWordle
-
-from satori import Text, ChannelType
+from satori import ChannelType, Text
 from satori.element import Custom
 
 # from satori.element import Custom

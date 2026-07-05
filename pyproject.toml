@@ -44,7 +44,7 @@ include = ["core/**/*.py", "tools/**/*.py", "plugins/**/*.py"]
 respect-gitignore = true
 
 [tool.ruff.lint]
-select = ["E", "W", "F", "UP", "C", "T", "Q"]
+select = ["E", "W", "F", "UP", "C", "T", "Q", "I"]
 ignore = ["E402", "F403", "F405", "C901", "T201"]
 
 [tool.ruff.lint.isort]

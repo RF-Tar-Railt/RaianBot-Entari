@@ -1,9 +1,9 @@
 from arclet.alconna import Alconna, Args, CommandMeta
-from arclet.entari import At, Image, Session, command, plugin, MessageChain, metadata
+from arclet.entari import At, Image, MessageChain, Session, command, metadata, plugin
 
 from core.event import NudgeEvent
-from .generate import generate
 
+from .generate import generate
 
 metadata(
     name="摸头",

@@ -1,5 +1,5 @@
 from arclet.entari import Entari, Session, plugin
-from arclet.entari.event.base import MessageCreatedEvent, FriendRequestEvent, GuildRequestEvent
+from arclet.entari.event.base import FriendRequestEvent, GuildRequestEvent, MessageCreatedEvent
 from arclet.letoderea import step_out
 
 

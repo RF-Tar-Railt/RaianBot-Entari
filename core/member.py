@@ -1,8 +1,6 @@
-from satori.element import Button
-
-from arclet.entari import At, ChannelType, Session, plugin, metadata
+from arclet.entari import At, ChannelType, Session, metadata, plugin
 from arclet.entari.event.base import GuildMemberAddedEvent, GuildMemberRemovedEvent
-
+from satori.element import Button
 
 metadata(
     name="用户入群/退群提醒",

@@ -1,9 +1,7 @@
 from arclet.alconna import Alconna, Args, CommandMeta, Field
-from arclet.entari import At, User, Image, Member, Session, command, MessageChain, metadata
+from arclet.entari import At, Image, Member, MessageChain, Session, User, command, metadata
 from arknights_toolkit.random_operator import RandomOperator
-
 from entari_plugin_browser import text2img
-
 
 metadata(
     name="随机干员信息",

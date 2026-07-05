@@ -1,23 +1,21 @@
 import asyncio
 import re
+from datetime import datetime
 from itertools import groupby
 from operator import attrgetter
-from datetime import datetime
 
 from arclet.alconna import Alconna, Args, CommandMeta, Field, Option
-from arclet.entari import scheduler, command, MessageChain, Entari, metadata
+from arclet.entari import Entari, MessageChain, command, metadata, scheduler
+from entari_plugin_browser import md2img
 from entari_plugin_database import AsyncSession, select
 from entari_plugin_database import service as db_service
 from entari_plugin_user import UserSession
 from satori import Image
 
-
-from entari_plugin_browser import md2img
 from tools.sk_autosign import bind, sign
 
 from .model import SKAutoSignRecord, SKAutoSignResultRecord
 from .utils import get_bind_by_user_id
-
 
 metadata(
     name="森空岛自动签到",

@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from datetime import datetime
 
-from sqlalchemy import DateTime, ForeignKey, Integer, Float, text, func
-from sqlalchemy.orm import Mapped, mapped_column
 from entari_plugin_database import Base
 from entari_plugin_user.models import User
+from sqlalchemy import DateTime, Float, ForeignKey, Integer, func, text
+from sqlalchemy.orm import Mapped, mapped_column
 
 
 @dataclass

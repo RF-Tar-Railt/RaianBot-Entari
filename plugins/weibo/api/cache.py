@@ -1,5 +1,5 @@
-from sqlalchemy.sql import select
 from entari_plugin_database import service as db_service
+from sqlalchemy.sql import select
 
 from .model import WeiboUser
 

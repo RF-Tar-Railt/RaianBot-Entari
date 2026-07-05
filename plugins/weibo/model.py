@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
+from entari_plugin_database import BaseOrm
 from sqlalchemy import BigInteger, String
 from sqlalchemy.orm import Mapped, mapped_column
-from entari_plugin_database import BaseOrm
 
 
 @dataclass

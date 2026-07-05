@@ -1,17 +1,17 @@
 from __future__ import annotations
 
 import secrets
-from collections.abc import Callable, Awaitable
+import time
+from collections.abc import Awaitable, Callable
 from typing import Any, Literal
 
-from satori.parser import parse
-import time
 import aiohttp
 import ujson
+from satori.parser import parse
 
+from .cache import WeiboUserCache
 from .exceptions import RespDataErrnoError, RespDataError, RespStatusError, WeiboError
 from .model import WeiboPost, WeiboUser
-from .cache import WeiboUserCache
 
 
 class WeiboAPI:

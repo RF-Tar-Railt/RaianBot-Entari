@@ -6,22 +6,20 @@ from pathlib import Path
 
 from arclet.alconna import command_manager
 from arclet.entari import (
-    MessageCreatedEvent,
-    MessageChain,
-    Session,
-    metadata,
-    listen,
-    plugin,
-    inject,
-    SendResponse,
     Entari,
+    MessageChain,
+    MessageCreatedEvent,
+    SendResponse,
+    Session,
+    inject,
+    listen,
+    metadata,
+    plugin,
 )
-from arclet.letoderea import Contexts, BLOCK
-
+from arclet.letoderea import BLOCK, Contexts
 from entari_plugin_llm import LLMToolEvent
 from entari_plugin_llm.exception import ModelNotFoundError
 from entari_plugin_llm.manager import LLMSessionManager
-
 
 metadata(name="通用模板对话", author=[{"name": "RF-Tar-Railt", "email": "rf_tar_railt@qq.com"}])
 

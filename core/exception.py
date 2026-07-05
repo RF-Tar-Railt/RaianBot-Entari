@@ -2,16 +2,15 @@ import traceback
 from contextlib import suppress
 from io import StringIO
 
-from arclet.letoderea import ExceptionEvent
 from arclet.entari import Entari, listen
 from arclet.entari.config import EntariConfig
+from arclet.letoderea import ExceptionEvent
 from entari_plugin_browser import md2img
 from satori import Image
 
 from tools.tencentcloud import TencentCloudApi
 
 from .config import cfg
-
 
 api = TencentCloudApi(
     cfg.tencentcloud.secret_id,

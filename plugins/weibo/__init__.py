@@ -1,4 +1,5 @@
 from arclet.entari import metadata, requires
+
 from .config import Config
 
 requires("entari-plugin-database", "entari-plugin-broswer")

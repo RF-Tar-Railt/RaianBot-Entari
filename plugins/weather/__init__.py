@@ -2,8 +2,7 @@ from __future__ import annotations
 
 import arclet.entari.config.models.pyd  # noqa: F401
 from arclet.alconna import Alconna, Args, CommandMeta, Field
-from arclet.entari import Image, MessageChain, metadata, plugin, command, local_data, Session
-
+from arclet.entari import Image, MessageChain, Session, command, local_data, metadata, plugin
 from entari_plugin_browser import playwright_api
 from entari_plugin_llm import LLMToolEvent
 

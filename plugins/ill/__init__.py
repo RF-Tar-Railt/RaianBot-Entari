@@ -3,8 +3,7 @@ import random
 from pathlib import Path
 
 from arclet.alconna import Alconna, Args, CommandMeta, Field, Option
-from arclet.entari import At, User, Member, Session, command, metadata
-
+from arclet.entari import At, Member, Session, User, command, metadata
 
 metadata(
     name="发病语录",
