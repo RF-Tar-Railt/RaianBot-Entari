@@ -43,7 +43,31 @@ weibo_fetch = Alconna(
 )
 
 _conf = plugin.plugin_config(Config)
-api = keeping("weibo_api", WeiboAPI(_conf.user_agent, _conf.cookie))
+
+if not _conf.use_browser and not _conf.cookie:
+    raise RuntimeError("请在配置中设置 use_browser 或 cookie，否则无法使用微博功能")
+
+
+async def fetch_ua_cookie():
+    if _conf.use_browser:
+        url = "https://m.weibo.cn/api/container/getIndex?containerid=100103type%3D3%26q%3Dtest%26t%3D0"
+        page = await playwright_api._context.new_page()
+        try:
+            await page.click("html")
+            await page.goto(url, timeout=20000, wait_until="networkidle")
+            cookie = await page.context.cookies()
+            cookie_str = "; ".join([f"{c.get('name')}={c.get('value')}" for c in cookie])
+            user_agent = await page.evaluate("() => navigator.userAgent")
+        except Exception as e:
+            logger.error(f"获取微博 UA 和 Cookie 失败: {e!r}")
+            raise
+        finally:
+            await page.close()
+        return user_agent, cookie_str
+    return _conf.user_agent, _conf.cookie
+
+
+api = keeping("weibo_api", WeiboAPI(fetch_ua_cookie))
 logger = log.wrapper("[Weibo]")
 
 
@@ -61,8 +85,9 @@ async def _cleanup_weibo_api():
 
 async def _handle_post(data: WeiboPost):
     imgs: list[Image] = []
-
-    async with playwright_api.page(viewport={"width": 800, "height": 2400}) as page:
+    async with playwright_api.page(
+        use_global_context=True, without_new_context=True, viewport={"width": 800, "height": 2400}
+    ) as page:
         try:
             await page.click("html")
             await page.goto(data.url, timeout=20000, wait_until="networkidle")
@@ -248,10 +273,10 @@ async def wlist(session: Session, db_session: AsyncSession):
     return "该群关注的微博动态有:\n" + "\n".join(names)
 
 
-FIRST_STARTUP = plugin.keeping("FIRST_STARTUP", {"updated": False})
+FIRST_STARTUP = plugin.keeping("FIRST_STARTUP", {"updated": True})
 
 
-@every(5, "minute", label="微博动态推送")
+@every(1, "minute", label="微博动态推送")
 async def update(app: Entari):
     posts = {}  # wid -> WeiboDynamic | (Message, str)
     followers = {}  # dict[wid, dict[(login_id, platform), list[channel_id]]]
@@ -267,6 +292,7 @@ async def update(app: Entari):
         try:
             if res := await api.update(int(uid)):
                 posts[int(uid)] = res
+                await asyncio.sleep(1)
             else:
                 continue
         except Exception as e:
@@ -310,6 +336,7 @@ async def update(app: Entari):
                     posts[wid] = (post, name)
                 else:
                     post, name = slot  # type: ignore
+                logger.info(f"微博动态推送: {name} -> {channel_id}")
                 await acc.send_message(channel_id, f"{name} 有一条新动态！请查收!")
                 await acc.send_message(channel_id, [post])
                 await asyncio.sleep(10)

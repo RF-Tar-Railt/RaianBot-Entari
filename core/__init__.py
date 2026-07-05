@@ -28,7 +28,7 @@ from PIL import Image as PILImage
 
 from tools.cos import CosConfig, put_object
 from .config import CoreConfig, cfg
-from . import exception, member, request, debug, channel  # noqa: F401
+from . import exception, member, request, debug, channel, offline  # noqa: F401
 
 
 alconna_config.default_namespace.formatter_type = MarkdownTextFormatter

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import secrets
+from collections.abc import Callable, Awaitable
 from typing import Any, Literal
 
 from satori.parser import parse
@@ -22,10 +24,11 @@ class WeiboAPI:
     # )
     session: aiohttp.ClientSession
 
-    def __init__(self, user_agent: str, cookie: str):
+    def __init__(self, ua_cookie_supplier: Callable[[], Awaitable[tuple[str, str]]]):
+        self.ua_cookie_supplier = ua_cookie_supplier
         self.cache = WeiboUserCache()
-        self.user_agent = user_agent
-        self.cookie = cookie
+        self.user_agent: str | None = None
+        self.cookie: str | None = None
 
     async def load(self):
         await self.cache.load()
@@ -42,10 +45,12 @@ class WeiboAPI:
         await self.close()
 
     async def _call(self, params: dict, timeout: int = 10) -> dict[str, Any]:
+        if not self.user_agent or not self.cookie:
+            self.user_agent, self.cookie = await self.ua_cookie_supplier()
         base_url = "https://m.weibo.cn/api/container/getIndex?"
         headers = {
             "Host": "m.weibo.cn",
-            "Referer": f"{base_url}{'&'.join(f'{k}={v}' for k, v in params.items())}",
+            "Referer": f"https://m.weibo.cn/u/{secrets.token_urlsafe(8)}",
             "Origin": "https://m.weibo.cn",
             "User-Agent": self.user_agent,
             "Content-Type": "application/json",
@@ -53,8 +58,8 @@ class WeiboAPI:
             "X-Requested-With": "XMLHttpRequest",
             "mweibo-pwa": "1",
             "Sec-Fetch-Site": "same-origin",
-            "Sec-Fetch-Mode": "navigate",
-            "Sec-Fetch-Dest": "document",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Dest": "empty",
             "Sec-Fetch-User": "?1",
         }
         if self.cookie:
