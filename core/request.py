@@ -1,10 +1,11 @@
 from arclet.entari import Entari, Session, plugin
 from arclet.entari.event.base import FriendRequestEvent, GuildRequestEvent, MessageCreatedEvent
 from arclet.letoderea import step_out
+from satori import MessageObject
 
 
 @plugin.listen(FriendRequestEvent, label="好友请求事件")
-async def on_friend_request(event: FriendRequestEvent, session: Session, app: Entari):
+async def on_friend_request(event: FriendRequestEvent, session: Session, app: Entari, message: MessageObject):
     """处理好友请求事件"""
     superusers = [
         acc
@@ -24,14 +25,18 @@ async def on_friend_request(event: FriendRequestEvent, session: Session, app: En
         step = step_out(MessageCreatedEvent, waiter, block=True)
         resp = await step.wait(timeout=120)
         if not resp:
-            await session.request_approve(False, "管理员超时未回复，请尝试重新发送请求")
+            await session.account.protocol.friend_approve(
+                message.id,
+                False,
+                "管理员超时未回复，请尝试重新发送请求"
+            )
             await session.account.protocol.send_message(channel, "处理请求超时")
             return
         if resp in ("同意", "yes", "y", "ok", "好", "是", "同意请求"):
-            await session.request_approve(True)
+            await session.account.protocol.friend_approve(message.id, True, "")
             await session.account.protocol.send_message(channel, "已同意好友请求")
             return
-        await session.request_approve(False, "管理员拒绝了请求")
+        await session.account.protocol.friend_approve(message.id, False, "管理员拒绝了请求")
         await session.account.protocol.send_message(channel, "已拒绝好友请求")
 
 

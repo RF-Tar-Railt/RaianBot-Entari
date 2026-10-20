@@ -70,5 +70,8 @@ async def report(event: ExceptionEvent, app: Entari):
     for account in accounts:
         async for friend in account.friend_list():
             if friend.user and int(friend.user.id) in qqs:
-                await account.send_private_message(friend.user, [Image.of(raw=img)])
+                try:
+                    await account.send_private_message(friend.user, [Image.of(raw=img)])
+                except Exception as e:
+                    print(f"Failed to send message to {friend.user.id}: {e}")
                 break

@@ -81,7 +81,7 @@ async def send_request(
     method: str,
     url: str,
     bucket: str,
-    timeout=30,
+    timeout=120,
     ci_request=False,
     auth: CosS3Auth | None = None,
     data: bytes | str | None = None,
@@ -120,6 +120,7 @@ async def send_request(
             content=data,
             headers=_headers,
             auth=auth,
+            timeout=timeout,
         )
         if res.status_code < 400:  # 2xx和3xx都认为是成功的
             return res

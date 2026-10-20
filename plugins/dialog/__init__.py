@@ -30,6 +30,7 @@ with (root / "assets" / "templates.json").open(encoding="utf-8") as f_obj:
 
 
 RECORD = deque(maxlen=16)
+LOCKS = {}
 
 
 @listen(SendResponse)
@@ -57,19 +58,24 @@ async def dialog(sess: Session[MessageCreatedEvent], app: Entari):
 
 @listen(MessageCreatedEvent, priority=19, label="AI 对话")
 @inject("entari_plugin_llm")
-async def llm_dialog(sess: Session, ctx: Contexts, app: Entari, is_reply_me: bool = False):
+async def llm_dialog(sess: Session, ctx: Contexts, app: Entari, is_reply_me: bool = False, is_notice_me: bool = False):
     """利用 LLM 进行对话"""
     if sess.event.sn in RECORD:
+        return BLOCK
+    if sess.user.id in LOCKS:
         return BLOCK
     content = sess.elements.extract_plain_text().strip()
     nickname = app.config.basic.nickname or "莱安"
     if is_reply_me:
+        content = content
+    elif is_notice_me and sess.account.platform not in ("qq", "qqguild"):
         content = content
     elif content.startswith(nickname):
         content = content[len(nickname) :].strip()
     else:
         return
     try:
+        LOCKS.setdefault(sess.user.id, True)
         answer = await LLMSessionManager.chat(
             MessageChain(content),
             session=sess,
@@ -81,6 +87,8 @@ async def llm_dialog(sess: Session, ctx: Contexts, app: Entari, is_reply_me: boo
         await sess.send(MessageChain(str(e)))
     except Exception as e:
         await sess.send(MessageChain(str(e)))
+    finally:
+        LOCKS.pop(sess.user.id, False)
     return BLOCK
 
 

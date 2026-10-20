@@ -3,8 +3,6 @@ import secrets
 from base64 import b64decode
 from io import BytesIO
 
-from arclet.alconna import config as alconna_config
-from arclet.alconna.tools.formatter import MarkdownTextFormatter
 from arclet.entari import (
     At,
     Author,
@@ -24,14 +22,13 @@ from arclet.entari.plugin import PluginRole
 from PIL import Image as PILImage
 from satori.adapters.qq.utils import parse_file_uri
 from satori.client.account import Account
-from satori.element import Custom
+from satori.element import Button, Custom, Style, select
 
 from tools.cos import CosConfig, put_object
 
 from . import channel, debug, exception, member, offline, request  # noqa: F401
 from .config import CoreConfig, cfg
 
-alconna_config.default_namespace.formatter_type = MarkdownTextFormatter
 _IMAGE_BASE64_RE = re.compile(r"^data:image/([\w/.+-]+);base64,")
 
 metadata(
@@ -65,7 +62,10 @@ plug = Plugin.current()
 @plug.use("::before_send")
 async def before_send_hook(message: MessageChain, account: Account):
     new = message.fork()
-    if cfg.cos_convert or (cfg.qq_markdown and account.platform == "qq"):
+    if cfg.cos_convert or (
+        cfg.qq_markdown and account.platform == "qq" and message.has(Image)
+        and (message.has(Text) or select(message, Button))
+    ):
         for i, item in enumerate(message):
             if not isinstance(item, Image):
                 continue
@@ -89,8 +89,8 @@ async def before_send_hook(message: MessageChain, account: Account):
                 except Exception:
                     pass
     if cfg.qq_markdown and account.platform == "qq" and new.has(Text):
-        in_mds = new.include(Text, Image, Custom)
-        new = new.exclude(Text, Image, Custom)
+        in_mds = MessageChain(elem for elem in new if isinstance(elem, (Text, Image, Custom, Style)))
+        new = MessageChain(elem for elem in new if not isinstance(elem, (Text, Image, Custom, Style)))
         if in_mds:
             children_ = []
             for elem in in_mds:

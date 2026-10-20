@@ -17,6 +17,12 @@ class SKAutoSignRecord(Base):
     token: Mapped[str] = mapped_column(String(256), nullable=False)
     """森空岛token"""
 
+    cred_value: Mapped[str] = mapped_column(String(256), nullable=True, default="")
+    """森空岛cred_value"""
+
+    cred_token: Mapped[str] = mapped_column(String(256), nullable=True, default="")
+    """森空岛cred_token"""
+
 
 @dataclass
 class SKAutoSignResultRecord(Base):

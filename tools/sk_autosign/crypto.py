@@ -1,202 +1,61 @@
-# https://gitee.com/FancyCabbage/skyland-auto-sign/blob/master/SecuritySm.py
-import base64
-import gzip
-import hashlib
-
-# 数美加密方法类
-import json
-import time
-import uuid
-
 import httpx
-from cryptography.hazmat.decrepit.ciphers.algorithms import TripleDES
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric import padding, rsa
-from cryptography.hazmat.primitives.ciphers.algorithms import AES
-from cryptography.hazmat.primitives.ciphers.base import Cipher
-from cryptography.hazmat.primitives.ciphers.modes import CBC, ECB
 
-# 查询dId请求头
-devices_info_url = "https://fp-it.portal101.cn/deviceprofile/v4"
-
-# 数美配置
-SM_CONFIG = {
-    "organization": "UWXspnCCJN4sfYlNfqps",
-    "appId": "default",
-    "publicKey": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCmxMNr7n8ZeT0tE1R9j/mPixoinPkeM+k4VGIn/s0k7N5rJAfnZ0eMER+QhwFvshzo0LNmeUkpR8uIlU/GEVr8mN28sKmwd2gpygqj0ePnBmOW4v0ZVwbSYK+izkhVFk2V/doLoMbWy6b+UnA8mkjvg0iYWRByfRsK2gdl7llqCwIDAQAB",  # noqa: E501
-    "protocol": "https",
-    "apiHost": "fp-it.portal101.cn",
-}
-
-PK: rsa.RSAPublicKey = serialization.load_der_public_key(base64.b64decode(SM_CONFIG["publicKey"]))  # type: ignore
-
-DES_RULE = {
-    "appId": {"cipher": "DES", "is_encrypt": 1, "key": "uy7mzc4h", "obfuscated_name": "xx"},
-    "box": {"is_encrypt": 0, "obfuscated_name": "jf"},
-    "canvas": {"cipher": "DES", "is_encrypt": 1, "key": "snrn887t", "obfuscated_name": "yk"},
-    "clientSize": {"cipher": "DES", "is_encrypt": 1, "key": "cpmjjgsu", "obfuscated_name": "zx"},
-    "organization": {"cipher": "DES", "is_encrypt": 1, "key": "78moqjfc", "obfuscated_name": "dp"},
-    "os": {"cipher": "DES", "is_encrypt": 1, "key": "je6vk6t4", "obfuscated_name": "pj"},
-    "platform": {"cipher": "DES", "is_encrypt": 1, "key": "pakxhcd2", "obfuscated_name": "gm"},
-    "plugins": {"cipher": "DES", "is_encrypt": 1, "key": "v51m3pzl", "obfuscated_name": "kq"},
-    "pmf": {"cipher": "DES", "is_encrypt": 1, "key": "2mdeslu3", "obfuscated_name": "vw"},
-    "protocol": {"is_encrypt": 0, "obfuscated_name": "protocol"},
-    "referer": {"cipher": "DES", "is_encrypt": 1, "key": "y7bmrjlc", "obfuscated_name": "ab"},
-    "res": {"cipher": "DES", "is_encrypt": 1, "key": "whxqm2a7", "obfuscated_name": "hf"},
-    "rtype": {"cipher": "DES", "is_encrypt": 1, "key": "x8o2h2bl", "obfuscated_name": "lo"},
-    "sdkver": {"cipher": "DES", "is_encrypt": 1, "key": "9q3dcxp2", "obfuscated_name": "sc"},
-    "status": {"cipher": "DES", "is_encrypt": 1, "key": "2jbrxxw4", "obfuscated_name": "an"},
-    "subVersion": {"cipher": "DES", "is_encrypt": 1, "key": "eo3i2puh", "obfuscated_name": "ns"},
-    "svm": {"cipher": "DES", "is_encrypt": 1, "key": "fzj3kaeh", "obfuscated_name": "qr"},
-    "time": {"cipher": "DES", "is_encrypt": 1, "key": "q2t3odsk", "obfuscated_name": "nb"},
-    "timezone": {"cipher": "DES", "is_encrypt": 1, "key": "1uv05lj5", "obfuscated_name": "as"},
-    "tn": {"cipher": "DES", "is_encrypt": 1, "key": "x9nzj1bp", "obfuscated_name": "py"},
-    "trees": {"cipher": "DES", "is_encrypt": 1, "key": "acfs0xo4", "obfuscated_name": "pi"},
-    "ua": {"cipher": "DES", "is_encrypt": 1, "key": "k92crp1t", "obfuscated_name": "bj"},
-    "url": {"cipher": "DES", "is_encrypt": 1, "key": "y95hjkoo", "obfuscated_name": "cf"},
-    "version": {"is_encrypt": 0, "obfuscated_name": "version"},
-    "vpw": {"cipher": "DES", "is_encrypt": 1, "key": "r9924ab5", "obfuscated_name": "ca"},
-}
-
-BROWSER_ENV = {
-    "plugins": "MicrosoftEdgePDFPluginPortableDocumentFormatinternal-pdf-viewer1,MicrosoftEdgePDFViewermhjfbmdgcfjbbpaeojofohoefgiehjai1",  # noqa: E501
-    "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0",  # noqa: E501
-    "canvas": "259ffe69",  # 基于浏览器的canvas获得的值，不知道复用行不行
-    "timezone": -480,  # 时区，应该是固定值吧
-    "platform": "Win32",
-    "url": "https://www.skland.com/",  # 固定值
-    "referer": "",
-    "res": "1920_1080_24_1.25",  # 屏幕宽度_高度_色深_window.devicePixelRatio
-    "clientSize": "0_0_1080_1920_1920_1080_1920_1080",
-    "status": "0011",  # 不知道在干啥
-}
+V4_URL = "https://fp-it.portal101.cn/deviceprofile/v4"
+V4_DATA = (
+    "4ac13cbe759d757cf4fd5465233024db2b7ae6bfbddd6d2d3eb964b246b2d4c3a8405b1601c3f3cc556257bd2784bfa6"
+    "c1021bed1e5509f24c229ae2366cccbe7d4bcc6fc9ab0a188743be5ed737e74b04bece1f2add13bbf5295378527eed932"
+    "1a220bc16cf5224f4a955802cec68927542796a1d9f74b9430461e6428561a9768c2fec228f702742280c441985f19a29"
+    "c5cef8bf360acf290953544a33c72488e1ea5531c74ae09cfdb4db1f2c85d7c25b28eb31e749f576f36c564f7376f4dd1"
+    "aefc00b668e45eea9431850c2af1fe1c7bf1a640dd4640f72da023482884c317a911075a5d48b10473348997adab48ebd"
+    "ca8b9c0679c1bcd24c178d18d580091b1543059a358734a5ec562b5516d625ae2eba740951429b18cd4f5bcbb43671b97"
+    "253257825003d9ef191c1583025de213e051767c6d37cc6cd9af051cb7baaed79d6515a6d305038f87f3bc4fdb27e2e4e"
+    "9f945d4147cecd87a34b55051eb371e3c52370e6d2ae4e05ca5832383bfa09d81cf8ab2a61dddcf1e71716a49cd19771e"
+    "f0e0a1265130cbfc9a5c8809ef62a5ff701587d6fa2f84c67f3e11ce5df940ad97bb8e9eb0ec688fe152c6c0b520b58a4"
+    "a3a54b39281ccac5c09853fe0de373c25ad2f26085f9163ef16bb51d42b622e16ee7fb7c16cff10da11f981ac973a9d2f"
+    "7d37a1a845fdbf3ad0377c8b01d46e4372b900fd07dde79030c74649906e28d219a723958adc45bf870cba074612a5408"
+    "2360df1c4f59114728f965c98176d216da23573f57b11cf8ccffdb6443f81c83977e7fe9fbcba9a4497a02aede5dd647f"
+    "742551614fb84d848d36f032ea3e9096ead45932c0e7e45d3a9e4fb95533b7f84d0b0d4ec85042e0dc94aa4c2670864b9"
+    "f8073fd650cafbea88860288c35f89b608a6b8b2d6f5a49a270c5f9ce7e4ca06e1ecd0ad3a57091413f53f34b2fbf9b5e"
+    "143706d1542d5f40fd9deeabc74df26acdd8b273ab1ad9811ba55b4466129c465e88897d01c9e7b27bc4025b66a5d63dd"
+    "61dee1b4c86cff1e9fb88153a541dba90968f70800142f876568e50f4c7f44c56555e9f9dcdce3984518c5bb10f8a8153"
+    "f879a0bbb032b881eb81baf0c669536e929896d3171323fd7078fb4a490ce282c6f685d92fbd98b9b905de7ac36f44328"
+    "cb4419139396b1d47b056e17e9798a9e80c5126c15f462810b1c7895794dd3efc2d6f90bf4f1c062dc3501b65bf41df03"
+    "7b79ab4c833ab1e6608567565e01d87357634ba09079658fdf80ee8a9a0df051a05a2047f05f0264b729cf7eba81d004b"
+    "3a707c9d43c90549c1ce5b470ba51bb32373bd6dd73c3fd1b6e857e62d1ddc64778cc1e95a9936214ac79d036f663ceea"
+    "8eaf069a708c744daeb185d9da3355b36a03aec25468d14a8f43e1e0e058c72e5564c4a9f25af8519750a781430998994"
+    "038ce6206cf45ba094a87ffa8c003c24875c804a611515a94be79baa2341de97ae16daac9bb28a0327420701f4241bd162"
+    "0bcefd1e6b190b9f35881c3860146facbbbc40c51c57fa83c8eda711c79eaffbc2c74376d0a7f8159f864487ed1e16d29"
+    "ca68c2e007bdb98d09a0a6af0070874537f759de1168615b7cbd9f2c9aac0440f8e7bcd9d6fa4bdcc7d157a59612df796"
+    "3cee5600"
+)
+V4_EP = (
+    "Pd6g1a45vL1Y34ssEr8chqwLtuB3FmAR7c5QiRVwJl6QbhfubFJ6pJwt8jIOk1G+MMNBZDrT+QYM3D2ruR/4qCit24oLYDQVk"
+    "B619CtNVToVp3epdI+Vs+83TzC4TqDXU18jGqMQJgA3f+GIwMWduJpCh+Tm26BiBdasrIE3I2w="
+)
+ORG_ID = "UWXspnCCJN4sfYlNfqps"
 
 
-# 将浏览器环境对象的key全部排序，然后对其所有的值及其子对象的值加入数字并字符串相加。
-# 若值为数字，则乘以10000(0x2710)再将其转成字符串存入数组,最后再做md5,存入tn变量（tn变量要做加密）
-# 把这个对象用加密规则进行加密，然后对结果做GZIP压缩（结果是对象，应该有序列化
-# 最后做AES加密（加密细节目前不清除），密钥为变量priId
-# 加密规则：
-# 新对象的key使用相对应加解密规则的obfuscated_name值，
-# value为字符串化后进行进行DES加密，再进行btoa加密
-
-
-# 通过测试
-def _DES(o: dict):
-    result = {}
-    for i in o.keys():
-        if i in DES_RULE.keys():
-            rule = DES_RULE[i]
-            res = o[i]
-            if rule["is_encrypt"] == 1:
-                c = Cipher(TripleDES(rule["key"].encode("utf-8")), ECB())
-                data = str(res).encode("utf-8")
-                # 补足字节
-                data += b"\x00" * 8
-                res = base64.b64encode(c.encryptor().update(data)).decode("utf-8")
-            result[rule["obfuscated_name"]] = res
-        else:
-            result[i] = o[i]
-    return result
-
-
-# 通过测试
-def _AES(v: bytes, k: bytes):
-    iv = "0102030405060708"
-    key = AES(k)
-    c = Cipher(key, CBC(iv.encode("utf-8")))
-    c.encryptor()
-    # 填充明文
-    v += b"\x00"
-    while len(v) % 16 != 0:
-        v += b"\x00"
-    return c.encryptor().update(v).hex()
-
-
-def GZIP(o: dict):
-    # 这个压缩结果似乎和前台不太一样,不清楚是否会影响
-    json_str = json.dumps(o, ensure_ascii=False)
-    stream = gzip.compress(json_str.encode("utf-8"), 2, mtime=0)
-    return base64.b64encode(stream)
-
-
-# 获得tn的值,后续做DES加密用
-# 通过测试
-def get_tn(o: dict):
-    sorted_keys = sorted(o.keys())
-
-    result_list = []
-
-    for i in sorted_keys:
-        v = o[i]
-        if isinstance(v, (int, float)):
-            v = str(v * 10000)
-        elif isinstance(v, dict):
-            v = get_tn(v)
-        result_list.append(v)
-    return "".join(result_list)
-
-
-def get_smid():
-    t = time.localtime()
-    _time = f"{t.tm_year}{t.tm_mon:0>2d}{t.tm_mday:0>2d}{t.tm_hour:0>2d}{t.tm_min:0>2d}{t.tm_sec:0>2d}"
-    uid = str(uuid.uuid4())
-    v = _time + hashlib.md5(uid.encode("utf-8")).hexdigest() + "00"
-    smsk_web = hashlib.md5(("smsk_web_" + v).encode("utf-8")).hexdigest()[0:14]
-    return v + smsk_web + "0"
-
-
-def get_d_id():
-    # storageName = '.thumbcache_' + md5(SM_CONFIG['organization']) // 用于从本地存储获得值
-    # uid = uuid()
-    # priId=md5(uid)[0:16]
-    # ep=rsa(uid,publicKey)
-    # SMID = localStorage.get(storageName);// 获得本地存储存的值
-    # _0x30b2eb为递归md5
-
-    uid = str(uuid.uuid4()).encode("utf-8")
-    priId = hashlib.md5(uid).hexdigest()[0:16]
-    # ep不一定对，先走走看
-    ep = PK.encrypt(uid, padding.PKCS1v15())
-    ep = base64.b64encode(ep).decode("utf-8")
-
-    browser = BROWSER_ENV.copy()
-    current_time = int(time.time() * 1000)
-    browser.update({"vpw": str(uuid.uuid4()), "svm": current_time, "trees": str(uuid.uuid4()), "pmf": current_time})
-
-    des_target = {
-        **browser,
-        "protocol": 102,
-        "organization": SM_CONFIG["organization"],
-        "appId": SM_CONFIG["appId"],
-        "os": "web",
-        "version": "3.0.0",
-        "sdkver": "3.0.0",
-        "box": "",  # 似乎是个SMID，但是第一次的时候是空,不过不影响结果
-        "rtype": "all",
-        "smid": get_smid(),
-        "subVersion": "1.0.0",
-        "time": 0,
-    }
-    des_target["tn"] = hashlib.md5(get_tn(des_target).encode()).hexdigest()
-
-    des_result = _AES(GZIP(_DES(des_target)), priId.encode("utf-8"))
-
-    response = httpx.post(
-        devices_info_url,
-        json={
+async def get_d_id() -> str:
+    async with httpx.AsyncClient() as client:
+        json = {
             "appId": "default",
-            "compress": 2,
-            "data": des_result,
+            "organization": ORG_ID,
+            "os": "web",
+            "orgId": ORG_ID,
+            "data": V4_DATA,
+            "ep": V4_EP,
             "encode": 5,
-            "ep": ep,
-            "organization": SM_CONFIG["organization"],
-            "os": "web",  # 固定值
-        },
-    )
+            "compress": 2,
+        }
+        response = await client.post(V4_URL, json=json)
+        response.raise_for_status()
+        data = response.json()
+        status = data.get("code")
+        if status != 1100:
+            raise RuntimeError(f"获取 dId 失败：{data.get('msg')}")
 
-    resp = response.json()
-    if resp["code"] != 1100:
-        raise Exception("did计算失败，请联系作者")
-    # 开头必须是B
-    return "B" + resp["detail"]["deviceId"]
+        detail = data.get("detail") or {}
+        device_id = detail.get("deviceId")
+        if not device_id:
+            raise RuntimeError("deviceId 缺失或无效")
+        return f"B{device_id}"

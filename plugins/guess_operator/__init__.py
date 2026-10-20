@@ -43,7 +43,7 @@ async def guess_info(session: Session):
 @guess_cmd.assign("更新")
 async def guess_update(session: Session):
     await wordle.update()
-    return await session.send("更新完毕")
+    await session.send("更新完毕")
 
 
 @guess_cmd.assign("重置")
@@ -51,7 +51,7 @@ async def guess_reset(session: Session):
     token = f"{session.account.platform}_{session.account.self_id}_{session.channel.id}"
     if (file := Path(f"{wordle_data_dir / f'{token}.json'}")).exists():
         file.unlink(missing_ok=True)
-    return await session.send("重置完毕")
+    await session.send("重置完毕")
 
 
 kb = [Button.input("取消", "primary")("取消游戏"), Button.input("提示", "primary")("提示")]
@@ -68,8 +68,9 @@ async def guess(
     token = f"{session.account.platform}_{session.account.self_id}_{session.channel.id}"
     if (wordle_data_dir / f"{token}.json").exists():
         if token not in await app.cache.get("$guess", []):
-            return await session.send("游戏异常，请重置后再试\n重置方法：猜干员 重置")
-        await session.send("游戏继续！")
+            await session.send("游戏异常，请重置后再试\n重置方法：猜干员 重置")
+        else:
+            await session.send("游戏继续！")
         return
 
     selected_name, selected = wordle.select(token)
@@ -134,7 +135,8 @@ async def guess(
             if token in guess_cache:
                 guess_cache.remove(token)
                 await app.cache.set("$guess", guess_cache)
-            return await session.send("游戏已结束！" + (f"\n答案为{ans.select}" if ans else ""))
+            await session.send("游戏已结束！" + (f"\n答案为{ans.select}" if ans else ""))
+            return guess_cmd.finish()
         if res is True:
             data = {
                 "rarity": f"星数：{'★' * (selected['rarity'] + 1)}",
@@ -174,7 +176,8 @@ async def guess(
         f"阵营：{selected['org']}\n"
         f"画师：{selected['artist']}\n"
     )
-    return await session.send(f"游戏已结束！\n答案为{answer}")
+    await session.send(f"游戏已结束！\n答案为{answer}")
+    return guess_cmd.finish()
 
 
 #     while True:

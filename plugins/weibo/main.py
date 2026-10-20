@@ -1,4 +1,5 @@
 import asyncio
+import random
 
 from arclet.alconna import Alconna, Arg, CommandMeta, Field, Option
 from arclet.entari import Entari, MessageChain, Session, command, inject, keeping, plugin
@@ -276,7 +277,7 @@ async def wlist(session: Session, db_session: AsyncSession):
 FIRST_STARTUP = plugin.keeping("FIRST_STARTUP", {"updated": True})
 
 
-@every(1, "minute", label="微博动态推送")
+@every(5, "minute", label="微博动态推送")
 async def update(app: Entari):
     posts = {}  # wid -> WeiboDynamic | (Message, str)
     followers = {}  # dict[wid, dict[(login_id, platform), list[channel_id]]]
@@ -292,7 +293,7 @@ async def update(app: Entari):
         try:
             if res := await api.update(int(uid)):
                 posts[int(uid)] = res
-                await asyncio.sleep(1)
+                await asyncio.sleep(2 + random.random())
             else:
                 continue
         except Exception as e:
@@ -339,7 +340,7 @@ async def update(app: Entari):
                 logger.info(f"微博动态推送: {name} -> {channel_id}")
                 await acc.send_message(channel_id, f"{name} 有一条新动态！请查收!")
                 await acc.send_message(channel_id, [post])
-                await asyncio.sleep(10)
+                await asyncio.sleep(10 + random.random())
 
     posts.clear()
     mapping.clear()

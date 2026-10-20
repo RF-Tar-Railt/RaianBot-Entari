@@ -1,7 +1,8 @@
 import random
 
 from arclet.alconna import Alconna, Args, CommandMeta, Field, command_manager
-from arclet.entari import Entari, MessageChain, Session, command, metadata, plugin
+from arclet.alconna.tools.formatter import MarkdownTextFormatter
+from arclet.entari import Entari, MessageChain, Ready, Session, command, metadata, plugin
 from arclet.entari.event.command import CommandOutput
 from entari_plugin_browser import md2img
 from satori.element import Custom, Image
@@ -118,3 +119,20 @@ async def convert_md_to_img(event: CommandOutput):
             )
         img = await md2img(event.content)
         return MessageChain(Image.of(raw=img))
+
+
+@plugin.listen(Ready)
+async def on_ready():
+    for cmd in command_manager.get_commands():
+        cmd_path = cmd.path
+        old_formatter = cmd.formatter
+
+        def _recover():
+            cmd_ = command_manager.get_command(cmd_path)
+            cmd_.formatter = old_formatter
+
+        md_formatter = MarkdownTextFormatter()
+        md_formatter.data = cmd.formatter.data.copy()
+        md_formatter.ignore_names = cmd.formatter.ignore_names.copy()
+        cmd.formatter = md_formatter
+        plugin.collect_disposes(_recover)

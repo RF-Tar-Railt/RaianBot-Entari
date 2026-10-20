@@ -1,4 +1,5 @@
 import asyncio
+import json
 
 from arclet.entari import Entari, MessageChain, Session, command, metadata, plugin_config
 from satori.element import Custom
@@ -90,7 +91,8 @@ async def song(content: command.Match[MessageChain], app: Entari, sess: Session)
     async with app.http.post(str(cfg.music_share_sign), json=data) as resp:
         if resp.status != 200:
             return "分享失败"
-        json_payload = await resp.text()
+        text = await resp.text()
+        json_payload = json.dumps(json.loads(text), ensure_ascii=False)
         if sess.account.platform == "milky":
             return MessageChain(Custom("milky:light_app", {"json_payload": json_payload}))
         else:
