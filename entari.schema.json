@@ -119,7 +119,14 @@
               "title": "Host"
             },
             "port": {
-              "type": "integer",
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ],
               "default": 5140,
               "description": "服务器端口",
               "title": "Port"
@@ -173,7 +180,14 @@
               "title": "Host"
             },
             "port": {
-              "type": "integer",
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ],
               "default": 8080,
               "description": "本机 Webhook 服务器端口",
               "title": "Port"
@@ -202,9 +216,16 @@
               "title": "Server Host"
             },
             "server_port": {
-              "type": "integer",
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ],
               "default": 5140,
-              "description": "发送请求的目标服务器端口",
+              "description": "发送请求的目标服务器端port",
               "title": "Server Port"
             },
             "server_path": {
@@ -368,35 +389,38 @@
           "default": [],
           "uniqueItems": true
         },
-        "::auto_reload": {
+        ".commands": {
           "type": "object",
-          "title": "Config",
+          "title": "CommandsConfig",
           "properties": {
-            "watch_dirs": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "需要监视的目录列表，支持相对路径和绝对路径",
-              "title": "Watch Dirs"
+            "block": {
+              "type": "boolean",
+              "default": true,
+              "description": "是否阻断消息传播",
+              "title": "Block"
             },
-            "watch_config": {
+            "need_notice_me": {
               "type": "boolean",
               "default": false,
-              "description": "是否监视配置文件的变化，默认为 False",
-              "title": "Watch Config"
+              "description": "是否需要通知我",
+              "title": "Need Notice Me"
             },
-            "debounce": {
-              "type": "integer",
-              "default": 1600,
-              "description": "防抖时间，单位为毫秒，防止频繁变动导致的重复加载，默认为 1600 毫秒",
-              "title": "Debounce"
+            "need_reply_me": {
+              "type": "boolean",
+              "default": false,
+              "description": "是否需要回复我",
+              "title": "Need Reply Me"
             },
-            "step": {
-              "type": "integer",
-              "default": 50,
-              "description": "轮询间隔，单位为毫秒，默认为 50 毫秒",
-              "title": "Step"
+            "use_config_prefix": {
+              "type": "boolean",
+              "default": true,
+              "description": "是否使用配置前缀",
+              "title": "Use Config Prefix"
+            },
+            "ignore_prefix_filter": {
+              "type": "string",
+              "description": "前缀过滤条件，使用过滤器语法，默认为私聊消息不使用前缀",
+              "title": "Ignore Prefix Filter"
             },
             "$disable": {
               "type": "string",
@@ -412,7 +436,32 @@
             }
           },
           "additionalProperties": false,
-          "description": "自动监视指定目录下的 Python 或配置文件变化并重新加载对应插件"
+          "description": "Commands Plugin"
+        },
+        ".scheduler": {
+          "type": "object",
+          "title": "_SchedulerConf",
+          "properties": {
+            "debug": {
+              "type": "boolean",
+              "default": true,
+              "title": "Debug"
+            },
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Simple Scheduler with interval / crontab task"
         },
         ".localdata": {
           "type": "object",
@@ -467,6 +516,12 @@
               "description": "是否记录发送的消息",
               "title": "Record Send"
             },
+            "short_message": {
+              "type": "boolean",
+              "default": false,
+              "description": "是否在日志中使用简短的消息内容",
+              "title": "Short Message"
+            },
             "$disable": {
               "type": "string",
               "description": "Expression for whether disable this plugin"
@@ -482,6 +537,52 @@
           },
           "additionalProperties": false,
           "description": "将收到[和发出]的消息打印在日志中"
+        },
+        "::auto_reload": {
+          "type": "object",
+          "title": "Config",
+          "properties": {
+            "watch_dirs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "需要监视的目录列表，支持相对路径和绝对路径",
+              "title": "Watch Dirs"
+            },
+            "watch_config": {
+              "type": "boolean",
+              "default": false,
+              "description": "是否监视配置文件的变化，默认为 False",
+              "title": "Watch Config"
+            },
+            "debounce": {
+              "type": "integer",
+              "default": 1600,
+              "description": "防抖时间，单位为毫秒，防止频繁变动导致的重复加载，默认为 1600 毫秒",
+              "title": "Debounce"
+            },
+            "step": {
+              "type": "integer",
+              "default": 50,
+              "description": "轮询间隔，单位为毫秒，默认为 50 毫秒",
+              "title": "Step"
+            },
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          },
+          "additionalProperties": false,
+          "description": "自动监视指定目录下的 Python 或配置文件变化并重新加载对应插件"
         },
         "::echo": {
           "type": "object",
@@ -1181,7 +1282,14 @@
               "title": "Host"
             },
             "port": {
-              "type": "integer",
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "string"
+                }
+              ],
               "default": 5140,
               "description": "服务器端口",
               "title": "Port"
@@ -1279,7 +1387,8 @@
                   "enum": [
                     "auto",
                     "h11",
-                    "httptools"
+                    "httptools",
+                    "zttp"
                   ],
                   "description": "HTTP protocol implementation. default: 'auto'",
                   "title": "Http"
@@ -2147,18 +2256,6 @@
               },
               "title": "Models"
             },
-            "toolcall_max_steps": {
-              "type": "integer",
-              "default": 8,
-              "description": "单个会话中工具调用的最大步骤数",
-              "title": "Toolcall Max Steps"
-            },
-            "context_length": {
-              "type": "integer",
-              "default": 50,
-              "description": "上下文长度",
-              "title": "Context Length"
-            },
             "tools": {
               "type": "object",
               "additionalProperties": {
@@ -2166,6 +2263,16 @@
                 "additionalProperties": {}
               },
               "title": "Tools"
+            },
+            "history_limit": {
+              "type": "integer",
+              "description": "限制每个用户的历史会话数量。如果未设置，则没有限制",
+              "title": "History Limit"
+            },
+            "max_tool_calls_from_history": {
+              "type": "integer",
+              "description": "限制历史上下文中的工具调用数量。如果未设置，则没有限制",
+              "title": "Max Tool Calls From History"
             },
             "$disable": {
               "type": "string",
@@ -2226,62 +2333,6 @@
               "additionalProperties": false
             }
           }
-        },
-        "webui": {
-          "type": "object",
-          "title": "Config",
-          "properties": {
-            "password": {
-              "type": "string",
-              "default": "",
-              "description": "WebUI 的登录密码，在本地部署时可以不设置",
-              "title": "Password"
-            },
-            "registry_url": {
-              "type": "string",
-              "default": "",
-              "description": "插件市场网址",
-              "title": "Registry Url"
-            },
-            "package_manager": {
-              "type": "string",
-              "default": "",
-              "description": "安装插件时使用的包管理器，不指定时将自动探测",
-              "title": "Package Manager"
-            },
-            "session_ttl": {
-              "type": "integer",
-              "default": 43200,
-              "description": "会话过期时间, 单位为秒，默认 12 小时",
-              "title": "Session Ttl"
-            },
-            "log_buffer_lines": {
-              "type": "integer",
-              "default": 5000,
-              "description": "日志缓冲区行数，超过该行数将会丢弃最早的日志，默认 5000 行",
-              "title": "Log Buffer Lines"
-            },
-            "login_rate_limit": {
-              "type": "string",
-              "default": "5/60s",
-              "description": "登录请求的速率限制，格式为 <次数>/<时间>，例如 5/60s 表示每分钟最多允许 5 次登录请求，默认 5/60s",
-              "title": "Login Rate Limit"
-            },
-            "$disable": {
-              "type": "string",
-              "description": "Expression for whether disable this plugin"
-            },
-            "$priority": {
-              "type": "integer",
-              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
-            },
-            "$filter": {
-              "type": "string",
-              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
-            }
-          },
-          "additionalProperties": false,
-          "description": "基于 Vite + Vue 3 + Element Plus 的可视化管理面板"
         },
         "core": {
           "type": "object",
@@ -2869,74 +2920,6 @@
           },
           "additionalProperties": false,
           "description": "简易的微博功能插件, 包括微博动态、微博用户信息等功能"
-        },
-        ".commands": {
-          "type": "object",
-          "title": "CommandsConfig",
-          "properties": {
-            "block": {
-              "type": "boolean",
-              "default": true,
-              "description": "是否阻断消息传播",
-              "title": "Block"
-            },
-            "need_notice_me": {
-              "type": "boolean",
-              "default": false,
-              "description": "是否需要通知我",
-              "title": "Need Notice Me"
-            },
-            "need_reply_me": {
-              "type": "boolean",
-              "default": false,
-              "description": "是否需要回复我",
-              "title": "Need Reply Me"
-            },
-            "use_config_prefix": {
-              "type": "boolean",
-              "default": true,
-              "description": "是否使用配置前缀",
-              "title": "Use Config Prefix"
-            },
-            "ignore_prefix_filter": {
-              "type": "string",
-              "description": "前缀过滤条件，使用过滤器语法，默认为私聊消息不使用前缀",
-              "title": "Ignore Prefix Filter"
-            },
-            "$disable": {
-              "type": "string",
-              "description": "Expression for whether disable this plugin"
-            },
-            "$priority": {
-              "type": "integer",
-              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
-            },
-            "$filter": {
-              "type": "string",
-              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
-            }
-          },
-          "additionalProperties": false,
-          "description": "Commands Plugin"
-        },
-        ".scheduler": {
-          "type": "object",
-          "description": "Simple Scheduler with interval / crontab task; no configuration required",
-          "additionalProperties": true,
-          "properties": {
-            "$disable": {
-              "type": "string",
-              "description": "Expression for whether disable this plugin"
-            },
-            "$priority": {
-              "type": "integer",
-              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
-            },
-            "$filter": {
-              "type": "string",
-              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
-            }
-          }
         }
       }
     },

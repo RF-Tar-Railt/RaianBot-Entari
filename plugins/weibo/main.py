@@ -2,7 +2,7 @@ import asyncio
 import random
 
 from arclet.alconna import Alconna, Arg, CommandMeta, Field, Option
-from arclet.entari import Entari, MessageChain, Session, command, inject, keeping, plugin
+from arclet.entari import Entari, MessageChain, Session, command, keeping, plugin
 from arclet.entari.command import Match, Query
 from arclet.entari.event.lifespan import Cleanup, Startup
 from arclet.entari.logger import log
@@ -73,7 +73,6 @@ logger = log.wrapper("[Weibo]")
 
 
 @plugin.listen(Startup)
-@inject("database/sqlalchemy")
 async def _startup_weibo_api():
     await api.load()
     logger.info("微博用户数据加载完毕")

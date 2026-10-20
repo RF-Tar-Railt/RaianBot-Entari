@@ -64,7 +64,7 @@ async def before_send_hook(message: MessageChain, account: Account):
     new = message.fork()
     if cfg.cos_convert or (
         cfg.qq_markdown and account.platform == "qq" and message.has(Image)
-        and (message.has(Text) or select(message, Button))
+        and (message.has(Text) or message.select(Button))
     ):
         for i, item in enumerate(message):
             if not isinstance(item, Image):

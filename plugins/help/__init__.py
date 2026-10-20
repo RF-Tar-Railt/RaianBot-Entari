@@ -124,12 +124,13 @@ async def convert_md_to_img(event: CommandOutput):
 @plugin.listen(Ready)
 async def on_ready():
     for cmd in command_manager.get_commands():
-        cmd_path = cmd.path
-        old_formatter = cmd.formatter
 
-        def _recover():
-            cmd_ = command_manager.get_command(cmd_path)
-            cmd_.formatter = old_formatter
+        def _recover(_path=cmd.path, _formatter=cmd.formatter):
+            try:
+                cmd_ = command_manager.get_command(_path)
+                cmd_.formatter = _formatter
+            except ValueError:
+                pass
 
         md_formatter = MarkdownTextFormatter()
         md_formatter.data = cmd.formatter.data.copy()

@@ -11,15 +11,15 @@ from arclet.entari import (
     MessageCreatedEvent,
     SendResponse,
     Session,
-    inject,
     listen,
     metadata,
     plugin,
 )
 from arclet.letoderea import BLOCK, Contexts
-from entari_plugin_llm import LLMToolEvent
+from entari_plugin_llm import register_tool
 from entari_plugin_llm.exception import ModelNotFoundError
 from entari_plugin_llm.manager import LLMSessionManager
+from entari_plugin_user import UserSession
 
 metadata(name="通用模板对话", author=[{"name": "RF-Tar-Railt", "email": "rf_tar_railt@qq.com"}])
 
@@ -57,18 +57,17 @@ async def dialog(sess: Session[MessageCreatedEvent], app: Entari):
 
 
 @listen(MessageCreatedEvent, priority=19, label="AI 对话")
-@inject("entari_plugin_llm")
-async def llm_dialog(sess: Session, ctx: Contexts, app: Entari, is_reply_me: bool = False, is_notice_me: bool = False):
+async def llm_dialog(sess: UserSession, ctx: Contexts, app: Entari, is_reply_me: bool = False, is_notice_me: bool = False):
     """利用 LLM 进行对话"""
-    if sess.event.sn in RECORD:
+    if sess.session.event.sn in RECORD:
         return BLOCK
     if sess.user.id in LOCKS:
         return BLOCK
-    content = sess.elements.extract_plain_text().strip()
+    content = sess.session.elements.extract_plain_text().strip()
     nickname = app.config.basic.nickname or "莱安"
     if is_reply_me:
         content = content
-    elif is_notice_me and sess.account.platform not in ("qq", "qqguild"):
+    elif is_notice_me and sess.session.account.platform not in ("qq", "qqguild"):
         content = content
     elif content.startswith(nickname):
         content = content[len(nickname) :].strip()
@@ -92,10 +91,7 @@ async def llm_dialog(sess: Session, ctx: Contexts, app: Entari, is_reply_me: boo
     return BLOCK
 
 
-tools = plugin.dispatch(LLMToolEvent)
-
-
-@tools
+@register_tool
 async def ask_user_for_argument(session: Session, prompt: str, timeout: int = 120):
     """
     向用户询问参数并等待
@@ -114,7 +110,7 @@ async def ask_user_for_argument(session: Session, prompt: str, timeout: int = 12
     return resp.extract_plain_text()
 
 
-@tools
+@register_tool
 async def list_command():
     """如果用户输入了是一个看似需要执行的指令，通过该工具列出所有可用的指令，方便模型选择。
 
@@ -124,7 +120,7 @@ async def list_command():
     return command_manager.all_command_help()
 
 
-@tools
+@register_tool
 async def get_command_help(command_name: str):
     """获取指定指令的帮助信息, 以便模型了解如何使用该指令。
 
@@ -144,7 +140,7 @@ async def get_command_help(command_name: str):
     )
 
 
-@tools
+@register_tool
 async def execute_command(session: Session, command_string: str, send_result: bool = True) -> str:
     """执行指定的指令，可以调用多次。例如某个指令可以返回一个中间结果，模型可以根据中间结果再调用其他指令。
 
