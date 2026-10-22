@@ -1271,7 +1271,192 @@
             "adapters": {
               "type": "array",
               "items": {
-                "type": "object"
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "title": "AdapterConfig",
+                    "properties": {
+                      "prefix": {
+                        "type": "string",
+                        "default": "/",
+                        "title": "Prefix"
+                      },
+                      "path": {
+                        "type": "string",
+                        "default": "onebot/v11",
+                        "title": "Path"
+                      },
+                      "endpoint": {
+                        "type": "string",
+                        "default": "ws",
+                        "title": "Endpoint"
+                      },
+                      "access_token": {
+                        "type": "string",
+                        "title": "Access Token"
+                      },
+                      "timeout": {
+                        "type": "integer",
+                        "default": 60,
+                        "title": "Timeout"
+                      },
+                      "$path": {
+                        "const": "@onebot11.reverse"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "required": [
+                      "$path"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "title": "AdapterConfig",
+                    "properties": {
+                      "app_id": {
+                        "type": "string",
+                        "title": "App Id"
+                      },
+                      "secret": {
+                        "type": "string",
+                        "title": "Secret"
+                      },
+                      "shard": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        },
+                        "title": "Shard"
+                      },
+                      "intent": {
+                        "$ref": "#/properties/plugins/properties/entari_plugin_server/properties/adapters/items/oneOf/1/$defs/Intents",
+                        "title": "Intent"
+                      },
+                      "is_sandbox": {
+                        "type": "boolean",
+                        "default": false,
+                        "title": "Is Sandbox"
+                      },
+                      "api_base": {
+                        "type": "string",
+                        "default": "https://api.sgroup.qq.com/",
+                        "title": "Api Base"
+                      },
+                      "sandbox_api_base": {
+                        "type": "string",
+                        "default": "https://sandbox.api.sgroup.qq.com",
+                        "title": "Sandbox Api Base"
+                      },
+                      "auth_base": {
+                        "type": "string",
+                        "default": "https://bots.qq.com/app/getAppAccessToken",
+                        "title": "Auth Base"
+                      },
+                      "token": {
+                        "type": "string",
+                        "title": "Token"
+                      },
+                      "$path": {
+                        "const": "@qq.websocket"
+                      }
+                    },
+                    "required": [
+                      "$path"
+                    ],
+                    "additionalProperties": false,
+                    "$defs": {
+                      "Intents": {
+                        "type": "object",
+                        "title": "Intents",
+                        "properties": {
+                          "guilds": {
+                            "type": "boolean",
+                            "default": true,
+                            "description": "频道和子频道的基础事件",
+                            "title": "Guilds"
+                          },
+                          "guild_members": {
+                            "type": "boolean",
+                            "default": true,
+                            "description": "频道成员事件",
+                            "title": "Guild Members"
+                          },
+                          "guild_messages": {
+                            "type": "boolean",
+                            "default": false,
+                            "description": "频道消息事件，仅私域机器人能够设置此 intents。",
+                            "title": "Guild Messages"
+                          },
+                          "guild_message_reactions": {
+                            "type": "boolean",
+                            "default": true,
+                            "description": "频道消息表态事件",
+                            "title": "Guild Message Reactions"
+                          },
+                          "direct_messages": {
+                            "type": "boolean",
+                            "default": false,
+                            "description": "频道私信消息事件",
+                            "title": "Direct Messages"
+                          },
+                          "open_forum_event": {
+                            "type": "boolean",
+                            "default": false,
+                            "title": "Open Forum Event"
+                          },
+                          "audio_live_member": {
+                            "type": "boolean",
+                            "default": false,
+                            "title": "Audio Live Member"
+                          },
+                          "group_members": {
+                            "type": "boolean",
+                            "default": true,
+                            "description": "群成员事件",
+                            "title": "Group Members"
+                          },
+                          "c2c_group_at_messages": {
+                            "type": "boolean",
+                            "default": false,
+                            "description": "群聊和单聊事件",
+                            "title": "C2C Group At Messages"
+                          },
+                          "interaction": {
+                            "type": "boolean",
+                            "default": false,
+                            "description": "互动事件（由按钮等组件触发的事件）",
+                            "title": "Interaction"
+                          },
+                          "message_audit": {
+                            "type": "boolean",
+                            "default": true,
+                            "description": "频道消息审核事件（由消息审核结果触发的事件）",
+                            "title": "Message Audit"
+                          },
+                          "forum_event": {
+                            "type": "boolean",
+                            "default": false,
+                            "description": "频道论坛事件，仅私域机器人能够设置此 intents。",
+                            "title": "Forum Event"
+                          },
+                          "audio_action": {
+                            "type": "boolean",
+                            "default": false,
+                            "description": "语音频道事件",
+                            "title": "Audio Action"
+                          },
+                          "at_messages": {
+                            "type": "boolean",
+                            "default": true,
+                            "description": "频道消息事件（只包含被 @ 的消息），为公域的消息事件",
+                            "title": "At Messages"
+                          }
+                        },
+                        "additionalProperties": false
+                      }
+                    }
+                  }
+                ]
               },
               "title": "Adapters"
             },
@@ -2249,6 +2434,20 @@
               "description": "全局提示词。用作没有特定提示词的模型的后备",
               "title": "Prompt"
             },
+            "skills": {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/properties/plugins/properties/entari_plugin_llm/$defs/SkillConfig"
+                  }
+                ]
+              },
+              "title": "Skills"
+            },
             "models": {
               "type": "array",
               "items": {
@@ -2290,19 +2489,53 @@
           "additionalProperties": true,
           "description": "一个通用的 LLM 工具箱插件，提供了丰富的工具和模型配置选项，支持多种 LLM 模型。",
           "$defs": {
+            "SkillConfig": {
+              "type": "object",
+              "title": "SkillConfig",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "技能名称，或包含 SKILL.md 的目录路径",
+                  "title": "Name"
+                },
+                "mode": {
+                  "enum": [
+                    "auto",
+                    "always"
+                  ],
+                  "default": "auto",
+                  "description": "auto: 由模型按需加载；always: 直接注入系统提示，适合输出格式约束",
+                  "title": "Mode"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "additionalProperties": false
+            },
             "ScopedModel": {
               "type": "object",
               "title": "ScopedModel",
               "properties": {
                 "name": {
                   "type": "string",
-                  "description": "用于 OpenAI API 的模型",
+                  "description": "模型名称（或 `provider/model` 形式的旧版 LiteLLM 写法）",
                   "title": "Name"
                 },
                 "alias": {
                   "type": "string",
                   "description": "模型的别名",
                   "title": "Alias"
+                },
+                "provider": {
+                  "type": "string",
+                  "description": "模型提供方，如 openai、anthropic、google、deepseek、dashscope、bedrock 等。\n未设置时根据 base_url 与模型名自动推断",
+                  "title": "Provider"
+                },
+                "vision": {
+                  "type": "boolean",
+                  "description": "该模型是否支持图片输入。未设置时根据提供方与模型名推断",
+                  "title": "Vision"
                 },
                 "api_key": {
                   "type": "string",
@@ -2321,6 +2554,21 @@
                   "description": "该模型使用的提示词。如果未设置，则回退到全局 prompt",
                   "title": "Prompt"
                 },
+                "skills": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "$ref": "#/properties/plugins/properties/entari_plugin_llm/$defs/SkillConfig"
+                      }
+                    ]
+                  },
+                  "description": "该模型启用的技能。None 表示继承全局配置，空列表表示显式关闭",
+                  "title": "Skills"
+                },
                 "extra": {
                   "type": "object",
                   "additionalProperties": {},
@@ -2333,6 +2581,62 @@
               "additionalProperties": false
             }
           }
+        },
+        "webui": {
+          "type": "object",
+          "title": "Config",
+          "properties": {
+            "password": {
+              "type": "string",
+              "default": "",
+              "description": "WebUI 的登录密码，在本地部署时可以不设置",
+              "title": "Password"
+            },
+            "registry_url": {
+              "type": "string",
+              "default": "https://arclet.top/entari-registry/registry.json",
+              "description": "插件市场网址",
+              "title": "Registry Url"
+            },
+            "package_manager": {
+              "type": "string",
+              "default": "",
+              "description": "安装插件时使用的包管理器，不指定时将自动探测",
+              "title": "Package Manager"
+            },
+            "session_ttl": {
+              "type": "integer",
+              "default": 43200,
+              "description": "会话过期时间, 单位为秒，默认 12 小时",
+              "title": "Session Ttl"
+            },
+            "log_buffer_lines": {
+              "type": "integer",
+              "default": 5000,
+              "description": "日志缓冲区行数，超过该行数将会丢弃最早的日志，默认 5000 行",
+              "title": "Log Buffer Lines"
+            },
+            "login_rate_limit": {
+              "type": "string",
+              "default": "5/60s",
+              "description": "登录请求的速率限制，格式为 <次数>/<时间>，例如 5/60s 表示每分钟最多允许 5 次登录请求，默认 5/60s",
+              "title": "Login Rate Limit"
+            },
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          },
+          "additionalProperties": false,
+          "description": "基于 Vite + Vue 3 + Element Plus 的可视化管理面板"
         },
         "core": {
           "type": "object",

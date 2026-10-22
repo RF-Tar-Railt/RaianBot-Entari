@@ -8,7 +8,8 @@ basic:
       - aiosqlite.*  # aiosqlite
       - PIL.*  # Pillow
       - httpcore.*  # httpcore
-      - hpack.hpack
+      - httpcore2.*  # httpcore2
+      - hpack.*
   prefix:
     - /
     - 莱安
@@ -95,6 +96,9 @@ plugins:
     command: 抽卡
 
   entari_plugin_llm:
+    skills:
+      - name: satori-output
+        mode: always
     tools:
       ::generic: {}
       ::plugin_manager: {}
@@ -112,10 +116,11 @@ plugins:
         text: true
         text_length_limit: 1000
     models:
-      - name: "deepseek/deepseek-v4-flash"
-        alias: "deepseek-v4-flash"
+      - name: "deepseek/deepseek-flash"
+        alias: "deepseek-flash"
         api_key: ${{ env.DEEPSEEK_API_KEY }}
         base_url: https://api.deepseek.com
+        vision: true
         prompt: |
           - 你是一个专门用于在游戏群，动漫群等群聊中负责闲聊的对话机器人；
           - 你与当前对话者的亲密度为 {trust} (百分制)；
@@ -127,7 +132,7 @@ plugins:
     .handlers.chat:
       $disable: true
 
-  ?webui: {}
+  webui: {}
 
   core:
     tencentcloud:

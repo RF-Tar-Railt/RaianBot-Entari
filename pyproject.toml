@@ -3,7 +3,7 @@ name = "entari-workspace"
 version = "0.0.0"
 description = ""
 dependencies = [
-    "arclet-entari[cron,dotenv,reload,yaml]>=0.19.1",
+    "arclet-entari[cron,dotenv,reload,yaml]>=0.19.2.post1",
     "entari-plugin-arkgacha>=0.5.3",
     "entari-plugin-user>=0.2.0",
     "entari-plugin-browser[jinja]>=0.6.2",
@@ -17,10 +17,10 @@ dependencies = [
     "psutil>=7.2.2",
     "humanize>=4.16.0",
     "diro-py>=0.1.1",
-    "entari-plugin-llm>=0.3.0",
+    "entari-plugin-llm>=0.4.0",
     "PyJWT>=2.15.1",
-    "entari-plugin-webui>=1.0.3",
-    "mcp>=2.3.0",
+    "entari-plugin-webui>=1.1.1",
+    "exa-py>=2.26.0",
 ]
 authors = [
     {"name" = "RF-Tar-Railt", "email" = "rf_tar_railt@qq.com"}
