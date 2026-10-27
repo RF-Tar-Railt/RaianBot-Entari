@@ -1,6 +1,6 @@
-import asyncio
 import json
 
+from aiohttp import ClientTimeout
 from arclet.entari import Entari, MessageChain, Session, command, metadata, plugin_config
 from satori.element import Custom
 from yarl import URL
@@ -30,10 +30,12 @@ async def song(content: command.Match[MessageChain], app: Entari, sess: Session)
     song_search_url = base_api / "search"
     try:
         async with app.http.get(
-            song_search_url, params={"keywords": content.result.extract_plain_text(), "limit": 10}, timeout=20
+            song_search_url,
+            params={"keywords": content.result.extract_plain_text(), "limit": 10},
+            timeout=ClientTimeout(20),
         ) as resp:
             data = await resp.json()
-    except asyncio.TimeoutError:
+    except TimeoutError:
         return "服务器繁忙中"
     if data["code"] != 200:
         return f"服务器返回错误：{data['message']}"
@@ -63,10 +65,10 @@ async def song(content: command.Match[MessageChain], app: Entari, sess: Session)
     song_id = song_["id"]
 
     song_detail_url = base_api / "song" / "detail"
-    async with app.http.get(song_detail_url, params={"ids": song_id}, timeout=20) as resp:
+    async with app.http.get(song_detail_url, params={"ids": song_id}, timeout=ClientTimeout(20)) as resp:
         picture_url = (await resp.json())["songs"][0]["al"]["picUrl"]
     song_summary = f"{song_['name']}--{', '.join(artist['name'] for artist in song_['artists'])}"
-    if sess.account.platform in ("qq", "qqguild"):
+    if sess.account.adapter == "qqbot":
         ark = Custom(
             "qq:ark24",
             {
@@ -93,7 +95,7 @@ async def song(content: command.Match[MessageChain], app: Entari, sess: Session)
             return "分享失败"
         text = await resp.text()
         json_payload = json.dumps(json.loads(text), ensure_ascii=False)
-        if sess.account.platform == "milky":
+        if sess.account.adapter == "milky":
             return MessageChain(Custom("milky:light_app", {"json_payload": json_payload}))
         else:
             return MessageChain(Custom("onebot:json", {"data": json_payload}))

@@ -16,8 +16,7 @@ basic:
   nickname: 莱安
   schema: true
   superusers:
-    milky: ['${{ env.MASTER_QQ }}']
-    onebot: ['${{ env.MASTER_QQ }}']
+    qq-client: ['${{ env.MASTER_QQ }}']
     qq: ['${{ env.MASTER_QQ_OPENID }}']
 
 adapters:

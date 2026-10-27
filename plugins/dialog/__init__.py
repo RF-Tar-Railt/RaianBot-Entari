@@ -13,7 +13,6 @@ from arclet.entari import (
     Session,
     listen,
     metadata,
-    plugin,
 )
 from arclet.letoderea import BLOCK, Contexts
 from entari_plugin_llm import register_tool
@@ -57,7 +56,9 @@ async def dialog(sess: Session[MessageCreatedEvent], app: Entari):
 
 
 @listen(MessageCreatedEvent, priority=19, label="AI 对话")
-async def llm_dialog(sess: UserSession, ctx: Contexts, app: Entari, is_reply_me: bool = False, is_notice_me: bool = False):
+async def llm_dialog(
+    sess: UserSession, ctx: Contexts, app: Entari, is_reply_me: bool = False, is_notice_me: bool = False
+):
     """利用 LLM 进行对话"""
     if sess.session.event.sn in RECORD:
         return BLOCK
@@ -67,7 +68,7 @@ async def llm_dialog(sess: UserSession, ctx: Contexts, app: Entari, is_reply_me:
     nickname = app.config.basic.nickname or "莱安"
     if is_reply_me:
         content = content
-    elif is_notice_me and sess.session.account.platform not in ("qq", "qqguild"):
+    elif is_notice_me and sess.session.account.adapter != "qqbot":
         content = content
     elif content.startswith(nickname):
         content = content[len(nickname) :].strip()

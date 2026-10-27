@@ -25,11 +25,7 @@ async def on_friend_request(event: FriendRequestEvent, session: Session, app: En
         step = step_out(MessageCreatedEvent, waiter, block=True)
         resp = await step.wait(timeout=120)
         if not resp:
-            await session.account.protocol.friend_approve(
-                message.id,
-                False,
-                "管理员超时未回复，请尝试重新发送请求"
-            )
+            await session.account.protocol.friend_approve(message.id, False, "管理员超时未回复，请尝试重新发送请求")
             await session.account.protocol.send_message(channel, "处理请求超时")
             return
         if resp in ("同意", "yes", "y", "ok", "好", "是", "同意请求"):

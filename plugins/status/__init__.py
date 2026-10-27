@@ -34,9 +34,9 @@ _connect_time: dict[str, datetime] = keeping("connect_time", {})
 @plugin.listen(AccountUpdate)
 async def record_time(event: AccountUpdate):
     if event.status is LoginStatus.ONLINE:
-        _connect_time[f"{event.account.platform}_{event.account.self_id}"] = datetime.now(CURRENT_TIMEZONE)
+        _connect_time[event.account.self_info.identifier] = datetime.now(CURRENT_TIMEZONE)
     elif event.status in {LoginStatus.OFFLINE, LoginStatus.DISCONNECT}:
-        _connect_time.pop(f"{event.account.platform}_{event.account.self_id}", None)
+        _connect_time.pop(event.account.self_info.identifier, None)
 
 
 def get_run_time() -> datetime:

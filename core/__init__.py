@@ -22,7 +22,7 @@ from arclet.entari.plugin import PluginRole
 from PIL import Image as PILImage
 from satori.adapters.qq.utils import parse_file_uri
 from satori.client.account import Account
-from satori.element import Button, Custom, Style, select
+from satori.element import Button, Custom, Style
 
 from tools.cos import CosConfig, put_object
 
@@ -63,7 +63,9 @@ plug = Plugin.current()
 async def before_send_hook(message: MessageChain, account: Account):
     new = message.fork()
     if cfg.cos_convert or (
-        cfg.qq_markdown and account.platform == "qq" and message.has(Image)
+        cfg.qq_markdown
+        and account.platform == "qq"
+        and message.has(Image)
         and (message.has(Text) or message.select(Button))
     ):
         for i, item in enumerate(message):
@@ -111,7 +113,7 @@ async def before_send_hook(message: MessageChain, account: Account):
                 author = Author(id=account.self_id, name=account.self_info.user.name or "莱安")
                 for elem in new[i:]:
                     msg.children.append(Message(content=[author, elem]))
-                new[i:] = [msg]
+                new = new[:i] + [msg]
                 break
     return new
 

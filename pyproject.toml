@@ -3,23 +3,23 @@ name = "entari-workspace"
 version = "0.0.0"
 description = ""
 dependencies = [
-    "arclet-entari[cron,dotenv,reload,yaml]>=0.19.2.post1",
+    "arclet-entari[cron,dotenv,reload,yaml]>=0.19.3.post1",
     "entari-plugin-arkgacha>=0.5.3",
     "entari-plugin-user>=0.2.0",
     "entari-plugin-browser[jinja]>=0.6.2",
-    "entari-plugin-server>=0.7.5",
-    "entari-plugin-database>=0.4.1",
-    "satori-python-core>=1.3.9.post1",
-    "satori-python-adapter-qq>=0.4.3",
-    "satori-python-adapter-milky>=0.5.1",
-    "satori-python-adapter-onebot11>=0.5.0",
+    "entari-plugin-server>=0.8.2",
+    "entari-plugin-database>=0.4.2",
+    "satori-python-core>=1.3.11",
+    "satori-python-adapter-qq>=0.6.2",
+    "satori-python-adapter-milky>=0.6.0",
+    "satori-python-adapter-onebot11>=0.6.0",
     "arknights-toolkit>=0.8.1",
     "psutil>=7.2.2",
     "humanize>=4.16.0",
     "diro-py>=0.1.1",
     "entari-plugin-llm>=0.4.0",
     "PyJWT>=2.15.1",
-    "entari-plugin-webui>=1.1.1",
+    "entari-plugin-webui>=1.1.2",
     "exa-py>=2.26.0",
 ]
 authors = [
@@ -40,7 +40,7 @@ extend-exclude = '''
 
 [tool.ruff]
 line-length = 120
-target-version = "py310"
+target-version = "py311"
 include = ["core/**/*.py", "tools/**/*.py", "plugins/**/*.py"]
 respect-gitignore = true
 
@@ -56,7 +56,7 @@ force-sort-within-sections = false
 distribution = false
 
 [tool.pyright]
-pythonVersion = "3.10"
+pythonVersion = "3.11"
 pythonPlatform = "All"
 typeCheckingMode = "basic"
 

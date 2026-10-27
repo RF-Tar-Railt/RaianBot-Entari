@@ -4,7 +4,7 @@ import binascii
 import hashlib
 import hmac
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from httpx import Request
 
@@ -99,7 +99,7 @@ def signature(secret_id: str, secret_key: str, action: str, req: Request, http: 
     req.headers["X-TC-Region"] = options.get("region", "ap-guangzhou")
 
     service = options["service"]
-    date = datetime.fromtimestamp(timestamp, tz=timezone.utc).strftime("%Y-%m-%d")
+    date = datetime.fromtimestamp(timestamp, tz=UTC).strftime("%Y-%m-%d")
     sign = get_tc3_signature(secret_key, req, date, service)
 
     auth = (

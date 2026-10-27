@@ -1,8 +1,10 @@
 from dataclasses import dataclass
 
-from entari_plugin_database import BaseOrm
+from alembic.operations import Operations
+from entari_plugin_database import BaseOrm, register_custom_migration
 from sqlalchemy import BigInteger, String
 from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.sql import update
 
 
 @dataclass
@@ -20,3 +22,8 @@ class WeiboSubscribe(BaseOrm):
 
     wid: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     """微博用户 ID"""
+
+
+@register_custom_migration(WeiboSubscribe, "upgrade", script_rev="replace_platform_1", replace=False)
+def replace_platform_1(ops: Operations, ctx, table):
+    ops.execute(update(WeiboSubscribe).where(WeiboSubscribe.platform == "milky").values(platform="qq-client"))
