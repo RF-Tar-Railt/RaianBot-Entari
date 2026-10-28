@@ -88,6 +88,8 @@ plugins:
     type: sqlite
     driver: aiosqlite
     name: .raianbot/data.db
+    options:
+      echo_pool: debug
 
   entari_plugin_user: {}
 
@@ -98,6 +100,8 @@ plugins:
     skills:
       - name: satori-output
         mode: always
+    group_context_limit: 20
+    chance_of_full_chat: 0.3
     tools:
       ::generic: {}
       ::plugin_manager: {}

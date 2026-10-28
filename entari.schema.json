@@ -1332,29 +1332,15 @@
                         "$ref": "#/properties/plugins/properties/entari_plugin_server/properties/adapters/items/oneOf/1/$defs/Intents",
                         "title": "Intent"
                       },
-                      "is_sandbox": {
-                        "type": "boolean",
-                        "default": false,
-                        "title": "Is Sandbox"
-                      },
                       "api_base": {
                         "type": "string",
-                        "default": "https://api.sgroup.qq.com/",
+                        "default": "https://api.bot.qq.com",
                         "title": "Api Base"
-                      },
-                      "sandbox_api_base": {
-                        "type": "string",
-                        "default": "https://sandbox.api.sgroup.qq.com",
-                        "title": "Sandbox Api Base"
                       },
                       "auth_base": {
                         "type": "string",
-                        "default": "https://bots.qq.com/app/getAppAccessToken",
+                        "default": "https://api.bot.qq.com/app/getAppAccessToken",
                         "title": "Auth Base"
-                      },
-                      "token": {
-                        "type": "string",
-                        "title": "Token"
                       },
                       "$path": {
                         "const": "@qq.websocket"
@@ -2764,9 +2750,14 @@
         },
         "dialog": {
           "type": "object",
-          "description": "通用模板对话; no configuration required",
-          "additionalProperties": true,
+          "title": "DialogConfig",
           "properties": {
+            "noticeme_filter_qqbot": {
+              "type": "boolean",
+              "default": true,
+              "description": "是否过滤 QQBot 下 @起始的 ai对话请求",
+              "title": "Noticeme Filter Qqbot"
+            },
             "$disable": {
               "type": "string",
               "description": "Expression for whether disable this plugin"
@@ -2779,7 +2770,9 @@
               "type": "string",
               "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
             }
-          }
+          },
+          "additionalProperties": false,
+          "description": "通用模板对话"
         },
         "draw": {
           "type": "object",

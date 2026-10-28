@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:0577755bab35884e7006cc5046059328188ba61a6e172ff7125dd935c7b1c1a9"
+content_hash = "sha256:0b75851f0ef361cb9538453f22edfe4215079cb8c0d3a31adc139fff399d1813"
 
 [[metadata.targets]]
 requires_python = ">=3.11,<3.14"
@@ -286,7 +286,7 @@ files = [
 
 [[package]]
 name = "arclet-entari"
-version = "0.19.3.post1"
+version = "0.19.4"
 requires_python = ">=3.11"
 summary = "Simple IM Framework based on satori-python"
 groups = ["default"]
@@ -300,44 +300,44 @@ dependencies = [
     "simpleeval>=1.0.8",
 ]
 files = [
-    {file = "arclet_entari-0.19.3.post1-py3-none-any.whl", hash = "sha256:909fc7b6dc326f7ae758c3cdf45f5ca01da3ede1a9213bb84987dd1cb0b4671b"},
-    {file = "arclet_entari-0.19.3.post1.tar.gz", hash = "sha256:3b5dbaf27fb896c611fe1c2dca183f98dbb1e8838ffdaf3ec42f6dedab6e2ad7"},
+    {file = "arclet_entari-0.19.4-py3-none-any.whl", hash = "sha256:65284c26d5c1a5a441aac3f658c581578f89e97e861e5a7c2b646092303f0e62"},
+    {file = "arclet_entari-0.19.4.tar.gz", hash = "sha256:4dd2cbec706ca931b624012c760d28aaeb3c5d42992476c8cea2f03875a9a119"},
 ]
 
 [[package]]
 name = "arclet-entari"
-version = "0.19.3.post1"
+version = "0.19.4"
 extras = ["cron", "dotenv", "reload", "yaml"]
 requires_python = ">=3.11"
 summary = "Simple IM Framework based on satori-python"
 groups = ["default"]
 dependencies = [
-    "arclet-entari==0.19.3.post1",
+    "arclet-entari==0.19.4",
     "croniter>=6.0.0",
     "python-dotenv>=1.2.4",
     "ruamel-yaml>=0.19.1",
     "watchfiles>=1.3.0",
 ]
 files = [
-    {file = "arclet_entari-0.19.3.post1-py3-none-any.whl", hash = "sha256:909fc7b6dc326f7ae758c3cdf45f5ca01da3ede1a9213bb84987dd1cb0b4671b"},
-    {file = "arclet_entari-0.19.3.post1.tar.gz", hash = "sha256:3b5dbaf27fb896c611fe1c2dca183f98dbb1e8838ffdaf3ec42f6dedab6e2ad7"},
+    {file = "arclet_entari-0.19.4-py3-none-any.whl", hash = "sha256:65284c26d5c1a5a441aac3f658c581578f89e97e861e5a7c2b646092303f0e62"},
+    {file = "arclet_entari-0.19.4.tar.gz", hash = "sha256:4dd2cbec706ca931b624012c760d28aaeb3c5d42992476c8cea2f03875a9a119"},
 ]
 
 [[package]]
 name = "arclet-entari"
-version = "0.19.3.post1"
+version = "0.19.4"
 extras = ["dotenv", "yaml"]
 requires_python = ">=3.11"
 summary = "Simple IM Framework based on satori-python"
 groups = ["default"]
 dependencies = [
-    "arclet-entari==0.19.3.post1",
+    "arclet-entari==0.19.4",
     "python-dotenv>=1.2.4",
     "ruamel-yaml>=0.19.1",
 ]
 files = [
-    {file = "arclet_entari-0.19.3.post1-py3-none-any.whl", hash = "sha256:909fc7b6dc326f7ae758c3cdf45f5ca01da3ede1a9213bb84987dd1cb0b4671b"},
-    {file = "arclet_entari-0.19.3.post1.tar.gz", hash = "sha256:3b5dbaf27fb896c611fe1c2dca183f98dbb1e8838ffdaf3ec42f6dedab6e2ad7"},
+    {file = "arclet_entari-0.19.4-py3-none-any.whl", hash = "sha256:65284c26d5c1a5a441aac3f658c581578f89e97e861e5a7c2b646092303f0e62"},
+    {file = "arclet_entari-0.19.4.tar.gz", hash = "sha256:4dd2cbec706ca931b624012c760d28aaeb3c5d42992476c8cea2f03875a9a119"},
 ]
 
 [[package]]
@@ -813,7 +813,7 @@ files = [
 
 [[package]]
 name = "entari-plugin-llm"
-version = "0.4.0"
+version = "0.5.0rc1"
 requires_python = "<3.16,>=3.11"
 summary = "An Entari Plugin for LLM Chat with Function Call"
 groups = ["default"]
@@ -824,8 +824,8 @@ dependencies = [
     "entari-plugin-user>=0.2.0",
 ]
 files = [
-    {file = "entari_plugin_llm-0.4.0-py3-none-any.whl", hash = "sha256:92ac687e738e6c9ff25e19d10cd40513f04a9bf0050e623193b3c07090e56627"},
-    {file = "entari_plugin_llm-0.4.0.tar.gz", hash = "sha256:dbd60cf4a2a9d371a558c6c5003783ed73eb9f808452c433c7d9f0430df4ee6c"},
+    {file = "entari_plugin_llm-0.5.0rc1-py3-none-any.whl", hash = "sha256:b3495566dfb416cb3af03d87fe96ff6385e04f42df868b82af1b73c0b0d6817d"},
+    {file = "entari_plugin_llm-0.5.0rc1.tar.gz", hash = "sha256:19a9beddbdcac3b088fa4f462b4c544860237248dd701871ca258890aaf1803f"},
 ]
 
 [[package]]
@@ -1852,6 +1852,46 @@ files = [
     {file = "msgpack-1.2.3-cp313-cp313-win_amd64.whl", hash = "sha256:bb89b5dc30469c84bbf8684826eb851d82412ca95690e111b9ac5e8fb343961a"},
     {file = "msgpack-1.2.3-cp313-cp313-win_arm64.whl", hash = "sha256:471e12a6a42498a31490c206e0069e343b6a7c35db540be73a879eb06f5be047"},
     {file = "msgpack-1.2.3.tar.gz", hash = "sha256:32edb81a2b5eb7cd7c9d941b2bfbbb082fd2cd09e0e725930316af6b708db186"},
+]
+
+[[package]]
+name = "msgspec"
+version = "0.22.0"
+requires_python = ">=3.10"
+summary = "A fast serialization and validation library, with builtin support for JSON, MessagePack, YAML, and TOML."
+groups = ["dev"]
+files = [
+    {file = "msgspec-0.22.0-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:fb1e129b81ac8fcf9ec649b081c6c8da1c7ea6f87cab336d46386abc2cd855c1"},
+    {file = "msgspec-0.22.0-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:dce29a04966e31abf9b83b697c6d672486526dc5d03fcd6970cb56d5dc1fbeea"},
+    {file = "msgspec-0.22.0-cp311-cp311-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:b962000e11dd34fb210a5a2c57a8a62b2d92b381c8cb3b05c075a83e38f8d645"},
+    {file = "msgspec-0.22.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:a6db3806b3b76ca78064255eac6fa101a8a64fe6f698d80fbaf81fdfa21217d4"},
+    {file = "msgspec-0.22.0-cp311-cp311-manylinux_2_31_riscv64.manylinux_2_39_riscv64.whl", hash = "sha256:a88d939d3fe4b8c7314645ebcd6e86c8c8a512ea7820d6550355973e803bc0f1"},
+    {file = "msgspec-0.22.0-cp311-cp311-musllinux_1_2_aarch64.whl", hash = "sha256:0b31746da07cba0e330c6433a94a4699ad77d3aeb9638d1a320a7686b69f6249"},
+    {file = "msgspec-0.22.0-cp311-cp311-musllinux_1_2_riscv64.whl", hash = "sha256:6ae370f92f3517f0e6f209ba7cc649c957b444868439197e046be07154667551"},
+    {file = "msgspec-0.22.0-cp311-cp311-musllinux_1_2_x86_64.whl", hash = "sha256:9a696f23f7c1ffb31fae308502e01a3965c3891d5c400f01d0d1096dbe77519e"},
+    {file = "msgspec-0.22.0-cp311-cp311-win_amd64.whl", hash = "sha256:024138c51afd335d0b4dce401be33902caafac2b64f8c9f2509a378986175d98"},
+    {file = "msgspec-0.22.0-cp311-cp311-win_arm64.whl", hash = "sha256:4600dbec738ed74e4c9bd35503e84701200ea7db344cfdeda80677b3ee53eb64"},
+    {file = "msgspec-0.22.0-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:ab1e9e7531e353653b906cdd12a0220cc288a1e8e3436aabc65f4508d91b14d9"},
+    {file = "msgspec-0.22.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:b60b43425a47eb9cfe987f6874e354ca7c760e58e295b4e2273ff03574df28a1"},
+    {file = "msgspec-0.22.0-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:b5a169b5b03f0f2c7a296c002647db1dab75d2cd501bca34e32b71cab0261b56"},
+    {file = "msgspec-0.22.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:99c401861c5bb3a57f7d6423ea7ed4352cd57aa3f04f4fbe9f3e3e4564a10f08"},
+    {file = "msgspec-0.22.0-cp312-cp312-manylinux_2_31_riscv64.manylinux_2_39_riscv64.whl", hash = "sha256:08826f5e5b0fa2f7a88592c396a243cfcc63d37e19f9d4fbe3b3f1be2fbdc404"},
+    {file = "msgspec-0.22.0-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:21460f54cee9208239b1a8421fdf25bffc77293e1daba88f585711ad839b9758"},
+    {file = "msgspec-0.22.0-cp312-cp312-musllinux_1_2_riscv64.whl", hash = "sha256:cfc3d9557de9c806318725b702f3e664db33167bb42892079b693c69893fd33b"},
+    {file = "msgspec-0.22.0-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:0b25dcbc108783cb72503ed705b9fbb8c3cb02ee5801923f44b5f038c91cc365"},
+    {file = "msgspec-0.22.0-cp312-cp312-win_amd64.whl", hash = "sha256:6ad64f5c260866b0d543f89f50cee43628989c1433c5de7ce820281fa28a2611"},
+    {file = "msgspec-0.22.0-cp312-cp312-win_arm64.whl", hash = "sha256:0922714feff5300aacd8ecd65fa828317ce4bf5212b3139258c0bfc0253cd80e"},
+    {file = "msgspec-0.22.0-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:f13c127a945479bc9db057eb253b8851075c8e1ae07ffc967bfa1c5676203a86"},
+    {file = "msgspec-0.22.0-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:5aa24eb475d070ecbbe5b21080fc3ce4b0b76c60de25cfe0c9678d8fb44bb42f"},
+    {file = "msgspec-0.22.0-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:627bfdfe5a4b3d916b3360b30f4cddeee3a084f56593e33527c6872fa8322ff9"},
+    {file = "msgspec-0.22.0-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:c6c310ef83e7e291b01a63298828f848348bb99e84a1098c4b3923c05674d032"},
+    {file = "msgspec-0.22.0-cp313-cp313-manylinux_2_31_riscv64.manylinux_2_39_riscv64.whl", hash = "sha256:7c1e76c6bd523141b9c05c2f8a70979cd0efedbd68855a66f292f8892c0b8fc7"},
+    {file = "msgspec-0.22.0-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:bc374dedd5f85a5f4de2386dc5f737894ccb8c1ac18e9566ce66fd9839e6285d"},
+    {file = "msgspec-0.22.0-cp313-cp313-musllinux_1_2_riscv64.whl", hash = "sha256:feafe612034d49e9144340c0b5168ee4e22c2af4aaa2c1db11ae84e1aac9543b"},
+    {file = "msgspec-0.22.0-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:6f48317f05312bfdf78248f53933f830f07ab75cc1c813ac3ca4220cb3b5b019"},
+    {file = "msgspec-0.22.0-cp313-cp313-win_amd64.whl", hash = "sha256:0739b068f31f2004a364f97679ba91f2f5ecd6ec2a5b4b890188ab5c57d20672"},
+    {file = "msgspec-0.22.0-cp313-cp313-win_arm64.whl", hash = "sha256:508278300dd4efbd21cd3a4b2b016160a5feac98bc880d3673f6c06697baaf62"},
+    {file = "msgspec-0.22.0.tar.gz", hash = "sha256:0a13624a4969159fe35d8c2a3d377b2b61bbd8585e327440d5e52725affcce38"},
 ]
 
 [[package]]

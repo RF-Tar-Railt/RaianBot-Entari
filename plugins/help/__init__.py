@@ -79,7 +79,7 @@ async def help_send(session: Session, query: str, app: Entari):
         if session.account.platform == "qq":
             return MessageChain(Custom("markdown", children=[md]))
         img = await md2img(md)
-        return MessageChain(Image.of(raw=img, title="help"))
+        return MessageChain(Image.of(raw=img, name="help"))
     if query.isdigit():
         cmds = list(command_manager.all_command_raw_help().keys())
         text = command_manager.get_command(cmds[int(query)]).get_help()
@@ -99,7 +99,7 @@ async def help_send(session: Session, query: str, app: Entari):
             )
         )
     img = await md2img(text)
-    return MessageChain(Image.of(raw=img, title=f"help_{query}"))
+    return MessageChain(Image.of(raw=img, name=f"help_{query}"))
 
 
 @plugin.listen(CommandOutput)

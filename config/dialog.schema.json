@@ -1,9 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
-  "description": "通用模板对话; no configuration required",
-  "additionalProperties": true,
+  "title": "DialogConfig",
   "properties": {
+    "noticeme_filter_qqbot": {
+      "type": "boolean",
+      "default": true,
+      "description": "是否过滤 QQBot 下 @起始的 ai对话请求",
+      "title": "Noticeme Filter Qqbot"
+    },
     "$disable": {
       "type": "string",
       "description": "Expression for whether disable this plugin"
@@ -20,5 +25,7 @@
       "type": "boolean",
       "description": "Whether this plugin is optional"
     }
-  }
+  },
+  "additionalProperties": false,
+  "description": "通用模板对话"
 }
