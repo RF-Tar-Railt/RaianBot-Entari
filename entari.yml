@@ -88,8 +88,6 @@ plugins:
     type: sqlite
     driver: aiosqlite
     name: .raianbot/data.db
-    options:
-      echo_pool: debug
 
   entari_plugin_user: {}
 
