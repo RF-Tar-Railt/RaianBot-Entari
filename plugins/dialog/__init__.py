@@ -24,7 +24,7 @@ from entari_plugin_llm.exception import ModelNotFoundError
 from entari_plugin_llm.manager import LLMSessionManager
 from entari_plugin_llm.config import _conf as llm_conf
 from entari_plugin_user import UserSession
-from satori import ChannelType
+from satori import ChannelType, select, Author, Quote
 
 from .config import DialogConfig
 from . import tools
@@ -82,19 +82,39 @@ async def _record(event: SendResponse):
 
 
 @listen(MessageCreatedEvent, priority=2, label="群聊上下文缓存")
-async def buffer_group_message(session: Session, event: MessageCreatedEvent):
+async def buffer_group_message(session: UserSession, event: MessageCreatedEvent):
     """记录群聊消息，供后续对话作为上下文使用"""
-    if llm_conf.group_context_limit <= 0 or session.channel.type != ChannelType.TEXT:
+    if llm_conf.group_context_limit <= 0 or event.channel.type != ChannelType.TEXT:
         return
 
-    sender = (event.member.nick if event.member else None) or (event.user.nick or event.user.name or event.user.id)
-    sender = sender if sender == event.user.id else f"{sender}({event.user.id})"
+    sender_name = (
+        (event.member.nick if event.member else None)
+        or session.user_name
+        or (event.user.nick or event.user.name if event.user else None)
+    )
+    sender = str(session.user_id) if not sender_name else f"{sender_name}({session.user_id})"
     group_context.record(
-        f"{session.account.platform}:{session.channel.id}",
+        f"{session.platform}:{event.channel.id}",
         message_id=event.message.id,
         sender=sender,
-        text=session.content,
+        text=session.session.content,
     )
+
+
+def quote_prefix(reply: Reply) -> str | None:
+    """把引用消息渲染成一段纯文本，避免 <author> 标签混进当前消息。"""
+    if not reply.quote.children:
+        return
+
+    author = select(reply.quote, Author)
+    if author:
+        name = author[0].name or author[0].id
+    else:
+        user = reply.origin.user
+        name = (user.name or user.id) if user is not None else "未知"
+
+    content = MessageChain(reply.quote.children).exclude(Author, Quote)
+    return f"[引用 {name}: {content!s}]"
 
 
 @listen(MessageCreatedEvent, priority=18, label="AI-对话")
@@ -124,25 +144,31 @@ async def llm_dialog(
         return BLOCK
     content = sess.session.content
     nickname = app.config.basic.nickname or "莱安"
+    tome = False
     if is_reply_me or is_notice_me:
         content = content
+        tome = True
     elif content.startswith(nickname):
         content = content[len(nickname) :].strip()
-    elif sess.session.channel.id in full_amount.get(f"{sess.account.platform}_{sess.account.self_id}", []):
+        tome = True
+    elif sess.session.channel.id in full_amount.get(f"{sess.account.platform}_{sess.account.self_id}", []) and random.random() < 0.1:
         content = content
     elif random.random() < llm_conf.get_chance_of(sess.session):
         content = content
     else:
-        return
+        return BLOCK
     if _conf.noticeme_filter_qqbot and is_notice_me and sess.account.adapter == "qqbot":
-        return
-    if reply and reply.quote.children:
-        content = content + " " + "".join(map(str, reply.quote.children))
+        return BLOCK
+    if reply:
+        prefix = quote_prefix(reply)
+        if prefix:
+            content = prefix + "\n" + content
     try:
         answer = await LLMSessionManager.chat(
             MessageChain.of(content),
             session=sess,
             ctx=ctx,
+            addressed=tome
         )
         await LLMSessionManager.send_answer(sess, answer, ctx)
     except ModelNotFoundError as e:

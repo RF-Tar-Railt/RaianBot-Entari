@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:0b75851f0ef361cb9538453f22edfe4215079cb8c0d3a31adc139fff399d1813"
+content_hash = "sha256:5b9934be801dd08fd0f4ff02a30575ecbb0ec8716e4fbe92985cd6a72ed76e6a"
 
 [[metadata.targets]]
 requires_python = ">=3.11,<3.14"
@@ -357,7 +357,7 @@ files = [
 
 [[package]]
 name = "arknights-toolkit"
-version = "0.8.3"
+version = "0.8.5"
 requires_python = "<3.16,>=3.9"
 summary = "Arknights-related Toolkit"
 groups = ["default"]
@@ -373,8 +373,8 @@ dependencies = [
     "ujson>=5.9.0",
 ]
 files = [
-    {file = "arknights_toolkit-0.8.3-py3-none-any.whl", hash = "sha256:3e1c47db4abd388f4f58ee0f1f93dc354e6ca731848e5b86c8c0b67f02688e4c"},
-    {file = "arknights_toolkit-0.8.3.tar.gz", hash = "sha256:b3d8d9c876ca5c5757400cdf873e6a7c11f0f0cd76bf45f01f0674296cb8e721"},
+    {file = "arknights_toolkit-0.8.5-py3-none-any.whl", hash = "sha256:6b32c930444a1ec94deae65d9b7b8c97e5b05ac0175b60af7c4d610c511d554a"},
+    {file = "arknights_toolkit-0.8.5.tar.gz", hash = "sha256:fbd259a3ed6a0024a6922c2087d67954d01a6dabe6b27bb637ddde5048e16312"},
 ]
 
 [[package]]
@@ -813,7 +813,7 @@ files = [
 
 [[package]]
 name = "entari-plugin-llm"
-version = "0.5.0rc1"
+version = "0.5.0rc3"
 requires_python = "<3.16,>=3.11"
 summary = "An Entari Plugin for LLM Chat with Function Call"
 groups = ["default"]
@@ -824,8 +824,8 @@ dependencies = [
     "entari-plugin-user>=0.2.0",
 ]
 files = [
-    {file = "entari_plugin_llm-0.5.0rc1-py3-none-any.whl", hash = "sha256:b3495566dfb416cb3af03d87fe96ff6385e04f42df868b82af1b73c0b0d6817d"},
-    {file = "entari_plugin_llm-0.5.0rc1.tar.gz", hash = "sha256:19a9beddbdcac3b088fa4f462b4c544860237248dd701871ca258890aaf1803f"},
+    {file = "entari_plugin_llm-0.5.0rc3-py3-none-any.whl", hash = "sha256:55ffca64fa37d6966730aa7da51082ddb71b296796404fdd468b86c2e553370d"},
+    {file = "entari_plugin_llm-0.5.0rc3.tar.gz", hash = "sha256:b46d5429b5d909afd63536a1504fee0e4d3675f8b4fdb251bda2a23bcb15e1ac"},
 ]
 
 [[package]]

@@ -100,6 +100,8 @@ plugins:
         mode: always
     group_context_limit: 20
     chance_of_full_chat: 0.3
+    memory:
+      enabled: true
     tools:
       ::generic: {}
       ::plugin_manager: {}
@@ -130,6 +132,7 @@ plugins:
           - 如果别人向你提问，你的答案不必很长，甚至可以避开这个话题或者俏皮地拒绝回答他；
           - 如果你想换一个话题，请不要用类似“今天的天气如何”的话题。
           - 请记住，你不能说你是程序或者AI,你是有血有肉、有真实情感的。
+          - 如果会话中有不懂的内容，尝试使用网络搜索工具确认含义。
     .handlers.chat:
       $disable: true
 
