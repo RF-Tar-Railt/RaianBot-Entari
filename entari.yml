@@ -74,6 +74,7 @@ plugins:
     watch_dirs: [.]
     watch_config: true
     $disable: env.ENVIRONMENT != "dev"
+  ::merge_quote: {}
 
   entari_plugin_browser:
     channel: chrome
@@ -118,6 +119,7 @@ plugins:
         enable_research: false
         text: true
         text_length_limit: 1000
+      ::no_reply: {}
     models:
       - name: "deepseek/deepseek-flash"
         alias: "deepseek-flash"

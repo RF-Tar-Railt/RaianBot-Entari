@@ -1,0 +1,4 @@
+# $schema: sticker.schema.json
+enabled: true
+auto_collect: true
+max_size_mb: 10.0

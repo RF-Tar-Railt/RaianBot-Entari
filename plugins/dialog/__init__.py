@@ -173,6 +173,4 @@ async def llm_dialog(
         await LLMSessionManager.send_answer(sess, answer, ctx)
     except ModelNotFoundError as e:
         await sess.send(MessageChain(str(e)))
-    except Exception as e:
-        await sess.send(MessageChain(str(e)))
     return BLOCK

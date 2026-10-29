@@ -660,6 +660,32 @@
             }
           }
         },
+        "::merge_quote": {
+          "type": "object",
+          "title": "Config",
+          "properties": {
+            "sep": {
+              "type": "string",
+              "default": " ",
+              "description": "合并消息的分隔符，默认为空格",
+              "title": "Sep"
+            },
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          },
+          "additionalProperties": false,
+          "description": "一个可以修改指令解析使得合并消息被放入指令体的插件。"
+        },
         "entari_plugin_browser": {
           "type": "object",
           "title": "BrowserConfig",
@@ -2454,10 +2480,54 @@
               "description": "限制每个用户的历史会话数量。如果未设置，则没有限制",
               "title": "History Limit"
             },
+            "group_context_limit": {
+              "type": "integer",
+              "default": 10,
+              "description": "群聊中最多携带多少条最近消息作为上下文。群聊按频道共享会话，0 表示关闭",
+              "title": "Group Context Limit"
+            },
             "max_tool_calls_from_history": {
               "type": "integer",
               "description": "限制历史上下文中的工具调用数量。如果未设置，则没有限制",
               "title": "Max Tool Calls From History"
+            },
+            "chance_of_full_chat": {
+              "oneOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/properties/plugins/properties/entari_plugin_llm/$defs/Chance"
+                  }
+                }
+              ],
+              "default": 0.5,
+              "description": "在群聊中，触发完整对话的概率。0 表示关闭，1 表示总是触发完整对话",
+              "title": "Chance Of Full Chat"
+            },
+            "memory": {
+              "$ref": "#/properties/plugins/properties/entari_plugin_llm/$defs/MemoryConfig",
+              "title": "Memory"
+            },
+            "session_ttl_days": {
+              "type": "number",
+              "default": 30.0,
+              "description": "会话空闲多少天后自动删除。None 或 0 表示不清理",
+              "title": "Session Ttl Days"
+            },
+            "strip_history_media": {
+              "type": "boolean",
+              "default": true,
+              "description": "是否在带历史记录运行前移除历史消息中的图片，避免过期链接导致请求失败",
+              "title": "Strip History Media"
+            },
+            "silent_reply": {
+              "type": "boolean",
+              "default": true,
+              "description": "是否允许机器人在未被明确叫到时调用 no_reply 工具结束本轮",
+              "title": "Silent Reply"
             },
             "$disable": {
               "type": "string",
@@ -2564,7 +2634,73 @@
               "required": [
                 "name"
               ],
-              "additionalProperties": false
+              "additionalProperties": false,
+              "description": "配置模型及其各自设置"
+            },
+            "Chance": {
+              "type": "object",
+              "title": "Chance",
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "description": "概率值，范围为 0 到 1",
+                  "title": "Value"
+                },
+                "platform": {
+                  "type": "string",
+                  "description": "适用的平台，如 \"qq\"、\"wechat\"、\"discord\" 等。",
+                  "title": "Platform"
+                },
+                "channel": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "适用的频道列表。['*'] 表示所有频道。",
+                  "title": "Channel"
+                }
+              },
+              "required": [
+                "value",
+                "platform",
+                "channel"
+              ],
+              "additionalProperties": false,
+              "description": "概率配置"
+            },
+            "MemoryConfig": {
+              "type": "object",
+              "title": "MemoryConfig",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "是否启用 Agno 长期记忆。群聊按频道共享，私聊按用户隔离",
+                  "title": "Enabled"
+                },
+                "mode": {
+                  "enum": [
+                    "auto",
+                    "agentic"
+                  ],
+                  "default": "auto",
+                  "description": "auto: 每轮结束后由模型自动抽取；agentic: 由模型通过工具主动增删改",
+                  "title": "Mode"
+                },
+                "model": {
+                  "type": "string",
+                  "description": "抽取记忆使用的模型别名。未设置时复用当前对话模型",
+                  "title": "Model"
+                },
+                "max_memories": {
+                  "type": "integer",
+                  "default": 50,
+                  "description": "最多注入多少条记忆，按最近更新排序。0 表示不限制",
+                  "title": "Max Memories"
+                }
+              },
+              "additionalProperties": false,
+              "description": "长期记忆配置"
             }
           }
         },
@@ -3036,6 +3172,78 @@
           },
           "additionalProperties": false,
           "description": "状态"
+        },
+        "sticker": {
+          "type": "object",
+          "title": "StickerConfig",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true,
+              "description": "是否启用表情包功能",
+              "title": "Enabled"
+            },
+            "auto_collect": {
+              "type": "boolean",
+              "default": false,
+              "description": "是否自动收集群里的表情包（默认关闭，避免每张图都调用视觉模型）",
+              "title": "Auto Collect"
+            },
+            "auto_collect_change": {
+              "type": "number",
+              "default": 0.2,
+              "description": "有多少概率触发自动收集任务",
+              "title": "Auto Collect Change"
+            },
+            "max_size_mb": {
+              "type": "number",
+              "default": 5.0,
+              "description": "单张表情包允许的最大体积（MB）",
+              "title": "Max Size Mb"
+            },
+            "max_stickers": {
+              "type": "integer",
+              "default": 500,
+              "description": "最多保存多少个表情包，超出后淘汰最旧的",
+              "title": "Max Stickers"
+            },
+            "tagging": {
+              "type": "boolean",
+              "default": true,
+              "description": "保存时是否调用视觉模型生成描述和标签",
+              "title": "Tagging"
+            },
+            "vision_model": {
+              "type": "string",
+              "description": "打标使用的模型别名，不填使用默认模型",
+              "title": "Vision Model"
+            },
+            "select_model": {
+              "type": "string",
+              "description": "多个候选时选择表情包使用的模型别名，不填使用默认模型",
+              "title": "Select Model"
+            },
+            "catalog_limit": {
+              "type": "integer",
+              "default": 20,
+              "description": "注入主提示词的表情包候选数量，0 表示只注入发送方式、不列清单",
+              "title": "Catalog Limit"
+            },
+            "$disable": {
+              "type": "string",
+              "description": "Expression for whether disable this plugin"
+            },
+            "$priority": {
+              "type": "integer",
+              "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+            },
+            "$filter": {
+              "type": "string",
+              "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+            }
+          },
+          "additionalProperties": false,
+          "description": "收集、识别并按平台发送表情包，配合 entari-plugin-llm 使用。"
         },
         "weather": {
           "$defs": {

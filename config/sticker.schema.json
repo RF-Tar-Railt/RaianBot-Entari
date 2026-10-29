@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "StickerConfig",
+  "properties": {
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "是否启用表情包功能",
+      "title": "Enabled"
+    },
+    "auto_collect": {
+      "type": "boolean",
+      "default": false,
+      "description": "是否自动收集群里的表情包（默认关闭，避免每张图都调用视觉模型）",
+      "title": "Auto Collect"
+    },
+    "auto_collect_change": {
+      "type": "number",
+      "default": 0.2,
+      "description": "有多少概率触发自动收集任务",
+      "title": "Auto Collect Change"
+    },
+    "max_size_mb": {
+      "type": "number",
+      "default": 5.0,
+      "description": "单张表情包允许的最大体积（MB）",
+      "title": "Max Size Mb"
+    },
+    "max_stickers": {
+      "type": "integer",
+      "default": 500,
+      "description": "最多保存多少个表情包，超出后淘汰最旧的",
+      "title": "Max Stickers"
+    },
+    "tagging": {
+      "type": "boolean",
+      "default": true,
+      "description": "保存时是否调用视觉模型生成描述和标签",
+      "title": "Tagging"
+    },
+    "vision_model": {
+      "type": "string",
+      "description": "打标使用的模型别名，不填使用默认模型",
+      "title": "Vision Model"
+    },
+    "select_model": {
+      "type": "string",
+      "description": "多个候选时选择表情包使用的模型别名，不填使用默认模型",
+      "title": "Select Model"
+    },
+    "catalog_limit": {
+      "type": "integer",
+      "default": 20,
+      "description": "注入主提示词的表情包候选数量，0 表示只注入发送方式、不列清单",
+      "title": "Catalog Limit"
+    },
+    "$disable": {
+      "type": "string",
+      "description": "Expression for whether disable this plugin"
+    },
+    "$priority": {
+      "type": "integer",
+      "description": "Plugin loading priority, lower value means higher priority (default: 16)"
+    },
+    "$filter": {
+      "type": "string",
+      "description": "Plugin filter expression, which will be evaluated in the context of the plugin"
+    },
+    "$optional": {
+      "type": "boolean",
+      "description": "Whether this plugin is optional"
+    }
+  },
+  "additionalProperties": false,
+  "description": "收集、识别并按平台发送表情包，配合 entari-plugin-llm 使用。"
+}

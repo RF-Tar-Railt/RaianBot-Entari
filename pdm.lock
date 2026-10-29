@@ -813,7 +813,7 @@ files = [
 
 [[package]]
 name = "entari-plugin-llm"
-version = "0.5.0rc3"
+version = "0.5.0rc4"
 requires_python = "<3.16,>=3.11"
 summary = "An Entari Plugin for LLM Chat with Function Call"
 groups = ["default"]
@@ -824,8 +824,8 @@ dependencies = [
     "entari-plugin-user>=0.2.0",
 ]
 files = [
-    {file = "entari_plugin_llm-0.5.0rc3-py3-none-any.whl", hash = "sha256:55ffca64fa37d6966730aa7da51082ddb71b296796404fdd468b86c2e553370d"},
-    {file = "entari_plugin_llm-0.5.0rc3.tar.gz", hash = "sha256:b46d5429b5d909afd63536a1504fee0e4d3675f8b4fdb251bda2a23bcb15e1ac"},
+    {file = "entari_plugin_llm-0.5.0rc4-py3-none-any.whl", hash = "sha256:8850cd407db898aa787dab5c85a3b9a259c83a19f1425a2661c901db277611e8"},
+    {file = "entari_plugin_llm-0.5.0rc4.tar.gz", hash = "sha256:1d493c1e7cef8ed216d3e1cc249bcbd38716aa6b4f6f4858c661171f02c09a44"},
 ]
 
 [[package]]
