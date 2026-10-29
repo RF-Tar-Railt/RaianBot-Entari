@@ -18,6 +18,7 @@ from arclet.entari import (
     local_data,
     keeping,
 )
+from arclet.entari.event.base import ReactionAddedEvent
 from arclet.letoderea import BLOCK, Contexts
 from entari_plugin_llm.context import group_context
 from entari_plugin_llm.exception import ModelNotFoundError
@@ -28,6 +29,7 @@ from satori import ChannelType, select, Author, Quote
 
 from .config import DialogConfig
 from . import tools
+from . import qface
 
 metadata(name="通用模板对话", author=[{"name": "RF-Tar-Railt", "email": "rf_tar_railt@qq.com"}], config=DialogConfig)
 
@@ -169,6 +171,30 @@ async def llm_dialog(
             session=sess,
             ctx=ctx,
             addressed=tome
+        )
+        await LLMSessionManager.send_answer(sess, answer, ctx)
+    except ModelNotFoundError as e:
+        await sess.send(MessageChain(str(e)))
+    return BLOCK
+
+
+@listen(ReactionAddedEvent, priority=19, label="AI-对话")
+async def llm_dialog_reaction(sess: UserSession, ctx: Contexts, event: ReactionAddedEvent):
+    origin = await sess.session.message_get(event.message.id)
+    if not origin.user or origin.user.id != sess.session.account.self_id:
+        return BLOCK
+    face_id = event.emoji.id
+    face = qface.query(face_id)
+    if face:
+        reaction = f"{face['qDes']}({face_id})"
+    else:
+        reaction = face_id
+    try:
+        answer = await LLMSessionManager.chat(
+            MessageChain(f"[用户对你的消息 {origin.content!r} 做了表情反应: {reaction}]"),
+            session=sess,
+            ctx=ctx,
+            addressed=True
         )
         await LLMSessionManager.send_answer(sess, answer, ctx)
     except ModelNotFoundError as e:
